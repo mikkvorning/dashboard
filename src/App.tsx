@@ -11,7 +11,6 @@ import {
   Flex,
   Grid,
   Metric,
-  SparkAreaChart,
   Subtitle,
   Tab,
   TabGroup,
@@ -48,6 +47,7 @@ import {
 import { FlipCard, MIN_LOAD_DELAY } from './components/FlipCard';
 import { ChevronUpIcon } from './components/icons/ChevronUpIcon';
 import { SortIndicatorIcon } from './components/icons/SortIndicatorIcon';
+import { KpiCard } from './components/KpiCard';
 
 type Selection = {
   kind: SelectionKind;
@@ -606,17 +606,16 @@ function App() {
               DataDein Prototypen
             </p>
             <h1 className='font-display text-3xl font-semibold tracking-[-0.02em] text-tremor-content-strong sm:text-4xl'>
-              Vask Af Data
+              DataDein Dashboard
             </h1>
             <Subtitle className='max-w-2xl font-body text-dd-body text-tremor-content-emphasis'>
               Overblik over forbrug, budgetudvikling og fokusenheder baseret på
               reelle regnskabsdata.
             </Subtitle>
           </div>
-
           <Card className='dd-grid-enter flex gap-4'>
             <div>
-              <Text className='dd-section-header mb-0'>
+              <Text className='dd-section-header font-bold mb-0'>
                 Rapporteringsperiode
               </Text>
               {activeData.generatedAt ? (
@@ -657,7 +656,7 @@ function App() {
               {selection ? (
                 // Keep a compact “current focus” state in the summary card so the user
                 // can see which chart element was selected without losing context.
-                <div className='rounded-tremor-default border border-tremor-border bg-tremor-background-muted p-6 content-between flex'>
+                <div className='rounded-tremor-default border border-tremor-border bg-tremor-background-muted p-6 flex'>
                   <div className='flex-1'>
                     <Text className='font-body text-dd-card-label uppercase m-0 text-tremor-content-subtle'>
                       Valgt fokus
@@ -699,6 +698,7 @@ function App() {
         >
           {/* KPI cards are intentionally lightweight and summary-focused; they give
               the user a quick signal before they drill into the detailed charts. */}
+
           <FlipCard
             isLoading={isLoading}
             isInitialLoad={isInitialLoad}
@@ -707,52 +707,42 @@ function App() {
             cardId='kpi-realized'
             onBackfaceReady={handleCardBackfaceReady}
           >
-            <Card className='dd-grid-enter h-full'>
-              <Flex
-                flexDirection='col'
-                alignItems='start'
-                justifyContent='between'
-                className='h-full'
-              >
-                <Text className='dd-section-header'>
-                  Samlet beløb (Realiseret)
-                </Text>
+            <KpiCard
+              title='Samlet beløb (Realiseret)'
+              metric={(() => {
+                const { value, unit } = formatCompact(activeData.kpis.belob, {
+                  scale: currencyScale,
+                  digits: 2,
+                });
 
-                <Metric className='m-0'>
-                  {(() => {
-                    const { value, unit } = formatCompact(
-                      activeData.kpis.belob,
-                      {
-                        scale: currencyScale,
-                        digits: 2,
-                      },
-                    );
-                    return (
-                      <div className='flex items-baseline gap-1'>
-                        <span className='text-datadein-marine'>{value}</span>
-                        <span className='font-body text-xl font-semibold text-tremor-content-subtle'>
-                          {unit}
-                        </span>
-                      </div>
-                    );
-                  })()}
-                </Metric>
-                <SparkAreaChart
-                  data={monthlyChartSeries}
-                  index='monthLabel'
-                  categories={['Beløb']}
-                  colors={['datadein-marine']}
-                  className='dd-chart-color-transition h-8 w-full'
-                />
+                return (
+                  <div className='flex items-baseline gap-1'>
+                    <span className='text-4xl text-datadein-marine'>
+                      {value}
+                    </span>
+                    <span className='font-body text-tremor-content-subtle'>
+                      {unit}
+                    </span>
+                  </div>
+                );
+              })()}
+              sparkChartProps={{
+                data: monthlyChartSeries,
+                index: 'monthLabel',
+                categories: ['Beløb'],
+                colors: ['datadein-marine'],
+                className: 'dd-chart-color-transition h-12 w-full',
+              }}
+              footer={
                 <BadgeDelta
-                  className='mt-4 '
+                  className='m-0 font-body text-dd-body text-tremor-content-subtle'
                   deltaType={budgetDeltaType}
                   isIncreasePositive
                 >
                   {formatCurrency(Math.abs(budgetDelta))} ift. budget
                 </BadgeDelta>
-              </Flex>
-            </Card>
+              }
+            />
           </FlipCard>
 
           <FlipCard
@@ -763,46 +753,37 @@ function App() {
             cardId='kpi-budget'
             onBackfaceReady={handleCardBackfaceReady}
           >
-            <Card className='dd-grid-enter h-full'>
-              <Flex
-                flexDirection='col'
-                alignItems='start'
-                justifyContent='between'
-                className='h-full'
-              >
-                <Text className='dd-section-header'>Samlet budget</Text>
+            <KpiCard
+              title='Samlet budget'
+              metric={(() => {
+                const { value, unit } = formatCompact(
+                  activeData.kpis.budgBelob,
+                  {
+                    scale: currencyScale,
+                    digits: 2,
+                  },
+                );
 
-                <Metric className='m-0'>
-                  {(() => {
-                    const { value, unit } = formatCompact(
-                      activeData.kpis.budgBelob,
-                      {
-                        scale: currencyScale,
-                        digits: 2,
-                      },
-                    );
-                    return (
-                      <div className='flex items-baseline gap-1'>
-                        <span className='text-datadein-marine'>{value}</span>
-                        <span className='font-body text-xl font-semibold text-tremor-content-subtle'>
-                          {unit}
-                        </span>
-                      </div>
-                    );
-                  })()}
-                </Metric>
-                <SparkAreaChart
-                  data={monthlyChartSeries}
-                  index='monthLabel'
-                  categories={['Budgetbeløb']}
-                  colors={['datadein-energi']}
-                  className='dd-chart-color-transition h-8 w-full'
-                />
-                <Text className='font-body text-dd-body mt-4 text-tremor-content-subtle'>
-                  Finansiel baseline for periode
-                </Text>
-              </Flex>
-            </Card>
+                return (
+                  <div className='flex items-baseline gap-1'>
+                    <span className='text-4xl text-datadein-marine'>
+                      {value}
+                    </span>
+                    <span className='font-body text-tremor-content-subtle'>
+                      {unit}
+                    </span>
+                  </div>
+                );
+              })()}
+              sparkChartProps={{
+                data: monthlyChartSeries,
+                index: 'monthLabel',
+                categories: ['Budgetbeløb'],
+                colors: ['datadein-energi'],
+                className: 'dd-chart-color-transition h-12 w-full',
+              }}
+              footer='Finansiel grundlinje'
+            />
           </FlipCard>
 
           <FlipCard
@@ -813,24 +794,12 @@ function App() {
             cardId='kpi-ae'
             onBackfaceReady={handleCardBackfaceReady}
           >
-            <Card className='dd-grid-enter h-full'>
-              <Flex
-                flexDirection='col'
-                alignItems='start'
-                justifyContent='between'
-                className='h-full'
-              >
-                <div>
-                  <Text className='dd-section-header'>ÅE (Årsværk)</Text>
-                  <Metric className='mt-2 text-datadein-marine'>
-                    {formatNumber(activeData.kpis.ae)}
-                  </Metric>
-                </div>
-                <Text className='font-body text-dd-body mt-4 text-tremor-content-subtle'>
-                  Budgetteret ÅE: {formatNumber(activeData.kpis.budgAe)}
-                </Text>
-              </Flex>
-            </Card>
+            <KpiCard
+              title='ÅE (Årsværk)'
+              metric={formatNumber(activeData.kpis.ae)}
+              metricClassName='text-4xl text-datadein-marine'
+              footer={`Budgetteret ÅE: ${formatNumber(activeData.kpis.budgAe)}`}
+            />
           </FlipCard>
 
           <FlipCard
@@ -841,24 +810,12 @@ function App() {
             cardId='kpi-timer'
             onBackfaceReady={handleCardBackfaceReady}
           >
-            <Card className='dd-grid-enter h-full'>
-              <Flex
-                flexDirection='col'
-                alignItems='start'
-                justifyContent='between'
-                className='h-full'
-              >
-                <div>
-                  <Text className='dd-section-header'>Timer / Elever</Text>
-                  <Metric className='mt-2 text-datadein-marine'>
-                    {formatNumber(activeData.kpis.timer)}
-                  </Metric>
-                </div>
-                <Text className='font-body text-dd-body mt-4 text-tremor-content-subtle'>
-                  Elever i periode: {formatNumber(activeData.kpis.elever)}
-                </Text>
-              </Flex>
-            </Card>
+            <KpiCard
+              title='Timer / Elever'
+              metric={formatNumber(activeData.kpis.timer)}
+              metricClassName='text-4xl text-datadein-marine'
+              footer={`Elever i periode: ${formatNumber(activeData.kpis.elever)}`}
+            />
           </FlipCard>
         </Grid>
 
@@ -1086,14 +1043,14 @@ function App() {
                                   className='mt-4 gap-3'
                                 >
                                   <Card className='p-3'>
-                                    <Text className='dd-section-header m-0'>
+                                    <Text className='dd-section-header font-bold m-0'>
                                       Afvigelsesformel
                                     </Text>
                                     <Text className='mt-2 text-tremor-content-emphasis'>
                                       {formatCurrency(
                                         selectedResultRow.realized,
                                       )}{' '}
-                                      -{' '}
+                                      +{' '}
                                       {formatCurrency(selectedResultRow.budget)}{' '}
                                       ={' '}
                                       <span className='font-semibold text-tremor-content-strong'>
@@ -1293,7 +1250,7 @@ function App() {
             onBackfaceReady={handleCardBackfaceReady}
           >
             <Card className='h-full'>
-              <Title className='font-display text-dd-panel-title text-tremor-content-strong'>
+              <Title className='dd-section-header font-bold'>
                 Beløbtrend pr. måned
               </Title>
               <Text className='font-body text-dd-body text-tremor-content-subtle'>
@@ -1337,7 +1294,7 @@ function App() {
             onBackfaceReady={handleCardBackfaceReady}
           >
             <Card className='h-full'>
-              <Title className='font-display text-dd-panel-title text-tremor-content-strong'>
+              <Title className='dd-section-header font-bold'>
                 Budget vs. Realiseret
               </Title>
               <Text className='font-body text-dd-body text-tremor-content-subtle'>
@@ -1384,7 +1341,7 @@ function App() {
             onBackfaceReady={handleCardBackfaceReady}
           >
             <Card className='h-full'>
-              <Title className='font-display text-dd-panel-title text-tremor-content-strong'>
+              <Title className='dd-section-header font-bold'>
                 Top Ansvarsområder
               </Title>
               <Text className='font-body text-dd-body text-tremor-content-subtle'>
@@ -1433,9 +1390,7 @@ function App() {
             onBackfaceReady={handleCardBackfaceReady}
           >
             <Card className='h-full'>
-              <Title className='font-display text-dd-panel-title text-tremor-content-strong'>
-                Top Formål
-              </Title>
+              <Title className='dd-section-header font-bold'>Top Formål</Title>
               <Text className='font-body text-dd-body text-tremor-content-subtle'>
                 Klik på en søjle for at vælge et fokuspunkt
               </Text>
@@ -1482,7 +1437,7 @@ function App() {
             onBackfaceReady={handleCardBackfaceReady}
           >
             <Card className='h-full'>
-              <Title className='font-display text-dd-panel-title text-tremor-content-strong'>
+              <Title className='dd-section-header font-bold'>
                 Omkostningsfordeling
               </Title>
               <Text className='font-body text-dd-body text-tremor-content-subtle'>
@@ -1523,9 +1478,11 @@ function App() {
 
                 {/* Center Label Overlay (Kept under z-0) */}
                 <div className='pointer-events-none absolute inset-0 flex items-center justify-center z-0'>
-                  <div className='text-center pt-10'>
-                    <div className='dd-section-header'>Totale omkostninger</div>
-                    <Metric className='mt-2 flex flex-col items-start'>
+                  <div className='text-center'>
+                    <Text className='text-datadein-marine font-bold text-xl m-0'>
+                      Totale omkostninger
+                    </Text>
+                    <Metric className='h-12 flex flex-col items-start my-0'>
                       {(() => {
                         const { value, unit } = formatCompact(
                           costCompositionTotal,
@@ -1536,10 +1493,10 @@ function App() {
                         );
                         return (
                           <div className='flex flex-col items-center w-full'>
-                            <span className='text-datadein-marine'>
+                            <span className='text-datadein-marine text-4xl font-bold'>
                               {value}
                             </span>
-                            <span className='font-body text-xl font-semibold text-tremor-content-subtle'>
+                            <span className='text-tremor-content-subtle text-xl font-semibold '>
                               {unit}
                             </span>
                           </div>
