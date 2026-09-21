@@ -26,9 +26,8 @@ import {
 } from '@tremor/react';
 
 import {
-  createChartSelectionTooltip,
-  createDonutSelectionTooltip,
-  type SelectionKind,
+  createChartSelectionTooltips,
+  useChartSelection,
 } from './utils/chartSelection';
 import { formatRangeLabel } from './utils/labels';
 import {
@@ -48,11 +47,6 @@ import { FlipCard, MIN_LOAD_DELAY } from './components/FlipCard';
 import { ChevronUpIcon } from './components/icons/ChevronUpIcon';
 import { SortIndicatorIcon } from './components/icons/SortIndicatorIcon';
 import { KpiCard } from './components/KpiCard';
-
-type Selection = {
-  kind: SelectionKind;
-  name: string;
-};
 
 type ResultRowVariant = 'line' | 'subtotal' | 'total';
 
@@ -76,7 +70,6 @@ const TOTAL_FLIP_CARDS = 10;
 
 function App() {
   const [selectedRange, setSelectedRange] = useState<DashboardRangeKey>('1Y');
-  const [selection, setSelection] = useState<Selection | null>(null);
   const [selectedResultRowId, setSelectedResultRowId] = useState<string | null>(
     null,
   );
@@ -87,15 +80,16 @@ function App() {
     key: ResultSortKey;
     direction: 'asc' | 'desc';
   }>({ key: 'default', direction: 'desc' });
-  const [hoverCandidates, setHoverCandidates] = useState<
-    Partial<Record<Selection['kind'], string>>
-  >({});
-  const previousSelectionKindRef = useRef<Selection['kind'] | null>(null);
-  const chartRootsRef = useRef<
-    Partial<Record<Selection['kind'], HTMLDivElement | null>>
-  >({});
-  const skipProgrammaticCommitKindRef = useRef<Selection['kind'] | null>(null);
   const lastResultTriggerRef = useRef<HTMLElement | null>(null);
+  const {
+    selection,
+    setSelection,
+    setChartRootRef,
+    updateSelection,
+    stageHoverCandidate,
+    handleChartCommit,
+    resetPreviousSelection,
+  } = useChartSelection();
 
   const {
     loadToken,
@@ -468,128 +462,10 @@ function App() {
   const budgetDeltaType = budgetDelta >= 0 ? 'increase' : 'decrease';
   const selectedRangeIndex = rangeOptions.indexOf(selectedRange);
 
-  const setChartRootRef = useCallback(
-    (kind: Selection['kind']) => (node: HTMLDivElement | null) => {
-      chartRootsRef.current[kind] = node;
-    },
-    [],
+  const chartTooltips = useMemo(
+    () => createChartSelectionTooltips(stageHoverCandidate),
+    [stageHoverCandidate],
   );
-
-  const clearChartInternalSelection = useCallback((kind: Selection['kind']) => {
-    const chartRoot = chartRootsRef.current[kind];
-    if (!chartRoot) {
-      return;
-    }
-
-    const clickTarget =
-      chartRoot.querySelector('.recharts-wrapper') ??
-      chartRoot.querySelector('.recharts-surface');
-
-    if (!(clickTarget instanceof Element)) {
-      return;
-    }
-
-    skipProgrammaticCommitKindRef.current = kind;
-    clickTarget.dispatchEvent(
-      new MouseEvent('click', { bubbles: true, cancelable: true }),
-    );
-
-    queueMicrotask(() => {
-      if (skipProgrammaticCommitKindRef.current === kind) {
-        skipProgrammaticCommitKindRef.current = null;
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    const previousKind = previousSelectionKindRef.current;
-    const currentKind = selection?.kind ?? null;
-
-    if (previousKind && previousKind !== currentKind) {
-      clearChartInternalSelection(previousKind);
-    }
-
-    previousSelectionKindRef.current = currentKind;
-  }, [clearChartInternalSelection, selection?.kind]);
-
-  const updateSelection = useCallback(
-    (kind: Selection['kind'], name: string) => {
-      setSelection((previous) => {
-        if (previous?.kind === kind && previous.name === name) {
-          return previous;
-        }
-        return { kind, name };
-      });
-    },
-    [],
-  );
-
-  const stageHoverCandidate = useCallback(
-    (kind: Selection['kind'], name?: string | null) => {
-      setHoverCandidates((previous) => {
-        if (!name) {
-          if (!previous[kind]) {
-            return previous;
-          }
-          const next = { ...previous };
-          delete next[kind];
-          return next;
-        }
-
-        if (previous[kind] === name) {
-          return previous;
-        }
-
-        return { ...previous, [kind]: name };
-      });
-    },
-    [],
-  );
-
-  const commitStagedSelection = useCallback(
-    (kind: Selection['kind']) => {
-      const candidate = hoverCandidates[kind];
-      if (candidate) {
-        updateSelection(kind, candidate);
-      }
-    },
-    [hoverCandidates, updateSelection],
-  );
-
-  const handleChartCommit = useCallback(
-    (kind: Selection['kind']) => {
-      if (skipProgrammaticCommitKindRef.current === kind) {
-        skipProgrammaticCommitKindRef.current = null;
-        return;
-      }
-
-      commitStagedSelection(kind);
-    },
-    [commitStagedSelection],
-  );
-
-  const monthlyTrendTooltip = createChartSelectionTooltip(
-    'Månedstrend',
-    stageHoverCandidate,
-  );
-
-  const budgetVsRealizedTooltip = createChartSelectionTooltip(
-    'Budget vs. Realiseret',
-    stageHoverCandidate,
-  );
-
-  const topAnsvarTooltip = createChartSelectionTooltip(
-    'Ansvar',
-    stageHoverCandidate,
-  );
-
-  const topFormaalTooltip = createChartSelectionTooltip(
-    'Formål',
-    stageHoverCandidate,
-  );
-
-  const selectionAwareDonutTooltip =
-    createDonutSelectionTooltip(stageHoverCandidate);
 
   // The selection state is intentionally kept in the page root so every chart can
   // react to the same user focus while the summary panel remains in sync.
@@ -674,7 +550,10 @@ function App() {
                     className='h-8'
                     size='xs'
                     variant='secondary'
-                    onClick={() => setSelection(null)}
+                    onClick={() => {
+                      resetPreviousSelection();
+                      setSelection(null);
+                    }}
                   >
                     Ryd valg
                   </Button>
@@ -1272,7 +1151,7 @@ function App() {
                     digits: 1,
                   }).full
                 }
-                customTooltip={monthlyTrendTooltip}
+                customTooltip={chartTooltips.monthlyTrend}
                 onClick={() => handleChartCommit('Månedstrend')}
                 onValueChange={(event) => {
                   const name = getEventName(event);
@@ -1315,7 +1194,7 @@ function App() {
                     digits: 1,
                   }).full
                 }
-                customTooltip={budgetVsRealizedTooltip}
+                customTooltip={chartTooltips.budgetVsRealized}
                 onClick={() => handleChartCommit('Budget vs. Realiseret')}
                 onValueChange={(event) => {
                   const name = getEventName(event);
@@ -1369,7 +1248,7 @@ function App() {
                       digits: 1,
                     }).full
                   }
-                  customTooltip={topAnsvarTooltip}
+                  customTooltip={chartTooltips.topAnsvar}
                   onValueChange={(event) => {
                     const name = getEventName(event);
                     if (name) {
@@ -1416,7 +1295,7 @@ function App() {
                       digits: 1,
                     }).full
                   }
-                  customTooltip={topFormaalTooltip}
+                  customTooltip={chartTooltips.topFormaal}
                   onValueChange={(event) => {
                     const name = getEventName(event);
                     if (name) {
@@ -1445,11 +1324,11 @@ function App() {
               </Text>
               <div className='relative mt-5 h-72'>
                 <div
+                  ref={setChartRootRef('KontoMap6')}
                   className='relative z-10 h-full w-full'
                   onClick={() => handleChartCommit('KontoMap6')}
                 >
                   <DonutChart
-                    ref={setChartRootRef('KontoMap6')}
                     className='dd-chart-color-transition h-full'
                     data={costCompositionSeries}
                     category='Beløb'
@@ -1464,7 +1343,7 @@ function App() {
                       formatCompact(v, { scale: getScale(v, 'kr.'), digits: 1 })
                         .full
                     }
-                    customTooltip={selectionAwareDonutTooltip}
+                    customTooltip={chartTooltips.donut}
                     showLabel={false}
                     showAnimation
                     onValueChange={(event) => {
