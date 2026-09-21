@@ -107,7 +107,7 @@ function App() {
   const { activeData, error, clearError, isLoading, isInitialLoad } =
     useDashboardRangeData({
       selectedRange,
-      canLoadRange: loadToken === 0 || areCardsReadyForLoad,
+      canCommitRange: loadToken === 0 || areCardsReadyForLoad,
     });
 
   const handleRangeChange = useCallback(

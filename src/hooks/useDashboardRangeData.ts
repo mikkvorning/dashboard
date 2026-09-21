@@ -6,23 +6,27 @@ export type DashboardRangeKey = '1Y' | '3Y' | 'ALL';
 
 type UseDashboardRangeDataOptions = {
   selectedRange: DashboardRangeKey;
-  canLoadRange: boolean;
+  canCommitRange: boolean;
 };
 
 export function useDashboardRangeData({
   selectedRange,
-  canLoadRange,
+  canCommitRange,
 }: UseDashboardRangeDataOptions) {
   const [rangeCache, setRangeCache] = useState<
     Partial<Record<DashboardRangeKey, DashboardRangeData>>
   >({});
+  const [displayedRange, setDisplayedRange] =
+    useState<DashboardRangeKey>(selectedRange);
   const [error, setError] = useState<string | null>(null);
 
   const isInitialLoad = Object.keys(rangeCache).length === 0 && error === null;
-  const isLoading = !rangeCache[selectedRange] && error === null;
+  const isLoading =
+    (displayedRange !== selectedRange || !rangeCache[selectedRange]) &&
+    error === null;
 
   useEffect(() => {
-    if (!canLoadRange || rangeCache[selectedRange] || error !== null) {
+    if (rangeCache[selectedRange] || error !== null) {
       return;
     }
 
@@ -62,15 +66,27 @@ export function useDashboardRangeData({
     return () => {
       cancelled = true;
     };
-  }, [canLoadRange, error, rangeCache, selectedRange]);
+  }, [error, rangeCache, selectedRange]);
+
+  useEffect(() => {
+    if (
+      displayedRange === selectedRange ||
+      !canCommitRange ||
+      !rangeCache[selectedRange]
+    ) {
+      return;
+    }
+
+    setDisplayedRange(selectedRange);
+  }, [canCommitRange, displayedRange, rangeCache, selectedRange]);
 
   const clearError = useCallback(() => {
     setError(null);
   }, []);
 
   const activeData = useMemo(
-    () => rangeCache[selectedRange] ?? initialSnapshot,
-    [rangeCache, selectedRange],
+    () => rangeCache[displayedRange] ?? initialSnapshot,
+    [displayedRange, rangeCache],
   );
 
   return {
