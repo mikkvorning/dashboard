@@ -1,0 +1,400 @@
+{
+  "generatedAt": "2026-09-11T10:13:18.153Z",
+  "range": "ALL",
+  "kpis": {
+    "belob": -18422692,
+    "budgBelob": -64125061,
+    "ae": 13829.7,
+    "budgAe": 14330.58,
+    "timer": 1379778,
+    "elever": 14835
+  },
+  "monthly": [
+    {
+      "month": "2021-02",
+      "Belob": 17938373,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2021-03",
+      "Belob": 4029725,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2021-04",
+      "Belob": 4039558,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2021-06",
+      "Belob": -4272200,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2021-09",
+      "Belob": -8268278,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2021-10",
+      "Belob": -16481224,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2021-12",
+      "Belob": 3856907,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2022-02",
+      "Belob": -8448408,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2022-03",
+      "Belob": -4436433,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2022-04",
+      "Belob": 9645839,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2022-06",
+      "Belob": -15102957,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2022-09",
+      "Belob": -5815499,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2022-10",
+      "Belob": 8232177,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2022-12",
+      "Belob": -11701093,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2023-01",
+      "Belob": -21030314,
+      "BudgBelob": -23457439
+    },
+    {
+      "month": "2023-02",
+      "Belob": -20243558,
+      "BudgBelob": -10655498
+    },
+    {
+      "month": "2023-03",
+      "Belob": 42211610,
+      "BudgBelob": 9446187
+    },
+    {
+      "month": "2023-04",
+      "Belob": 8139194,
+      "BudgBelob": 14963917
+    },
+    {
+      "month": "2023-05",
+      "Belob": -16938714,
+      "BudgBelob": 25849144
+    },
+    {
+      "month": "2023-06",
+      "Belob": 5650526,
+      "BudgBelob": -32687154
+    },
+    {
+      "month": "2023-07",
+      "Belob": -5840906,
+      "BudgBelob": -15760788
+    },
+    {
+      "month": "2023-08",
+      "Belob": -20859990,
+      "BudgBelob": 15394281
+    },
+    {
+      "month": "2023-09",
+      "Belob": 15665536,
+      "BudgBelob": 25595231
+    },
+    {
+      "month": "2023-10",
+      "Belob": 5552184,
+      "BudgBelob": 13525941
+    },
+    {
+      "month": "2023-11",
+      "Belob": -23814142,
+      "BudgBelob": 25765350
+    },
+    {
+      "month": "2023-12",
+      "Belob": 32319287,
+      "BudgBelob": 12020373
+    },
+    {
+      "month": "2024-01",
+      "Belob": -7736550,
+      "BudgBelob": -7998325
+    },
+    {
+      "month": "2024-02",
+      "Belob": -14413681,
+      "BudgBelob": -22996066
+    },
+    {
+      "month": "2024-03",
+      "Belob": 26801344,
+      "BudgBelob": -24717894
+    },
+    {
+      "month": "2024-04",
+      "Belob": 5272180,
+      "BudgBelob": -9558543
+    },
+    {
+      "month": "2024-05",
+      "Belob": -20804923,
+      "BudgBelob": 25631221
+    },
+    {
+      "month": "2024-06",
+      "Belob": 5809235,
+      "BudgBelob": -11513385
+    },
+    {
+      "month": "2024-07",
+      "Belob": -8927320,
+      "BudgBelob": 14326669
+    },
+    {
+      "month": "2024-08",
+      "Belob": -25823569,
+      "BudgBelob": -21119967
+    },
+    {
+      "month": "2024-09",
+      "Belob": 20363508,
+      "BudgBelob": -22181736
+    },
+    {
+      "month": "2024-10",
+      "Belob": 955733,
+      "BudgBelob": 24625749
+    },
+    {
+      "month": "2024-11",
+      "Belob": -19831049,
+      "BudgBelob": -15322383
+    },
+    {
+      "month": "2024-12",
+      "Belob": 34283438,
+      "BudgBelob": -34387775
+    },
+    {
+      "month": "2025-01",
+      "Belob": -9472510,
+      "BudgBelob": -7227028
+    },
+    {
+      "month": "2025-02",
+      "Belob": -19801558,
+      "BudgBelob": -21010508
+    },
+    {
+      "month": "2025-03",
+      "Belob": 31097620,
+      "BudgBelob": 29907530
+    },
+    {
+      "month": "2025-04",
+      "Belob": 10059030,
+      "BudgBelob": -6685476
+    },
+    {
+      "month": "2025-05",
+      "Belob": -23649026,
+      "BudgBelob": -26644908
+    },
+    {
+      "month": "2025-06",
+      "Belob": 4793931,
+      "BudgBelob": 19855023
+    },
+    {
+      "month": "2025-07",
+      "Belob": -26901736,
+      "BudgBelob": -6412116
+    },
+    {
+      "month": "2025-08",
+      "Belob": -30863398,
+      "BudgBelob": -24763297
+    },
+    {
+      "month": "2025-09",
+      "Belob": 32719367,
+      "BudgBelob": 18561126
+    },
+    {
+      "month": "2025-10",
+      "Belob": 21100531,
+      "BudgBelob": -2231159
+    },
+    {
+      "month": "2025-11",
+      "Belob": 15435566,
+      "BudgBelob": -23738546
+    },
+    {
+      "month": "2025-12",
+      "Belob": 7083945,
+      "BudgBelob": 51547063
+    },
+    {
+      "month": "2026-01",
+      "Belob": 0,
+      "BudgBelob": -19586452
+    },
+    {
+      "month": "2026-02",
+      "Belob": 0,
+      "BudgBelob": -16617990
+    },
+    {
+      "month": "2026-03",
+      "Belob": 0,
+      "BudgBelob": 42346816
+    },
+    {
+      "month": "2026-04",
+      "Belob": 0,
+      "BudgBelob": -19303804
+    },
+    {
+      "month": "2026-05",
+      "Belob": 0,
+      "BudgBelob": -23708922
+    },
+    {
+      "month": "2026-06",
+      "Belob": 0,
+      "BudgBelob": 28853043
+    },
+    {
+      "month": "2026-07",
+      "Belob": 0,
+      "BudgBelob": -18915518
+    },
+    {
+      "month": "2026-08",
+      "Belob": 0,
+      "BudgBelob": -23384864
+    },
+    {
+      "month": "2026-09",
+      "Belob": 0,
+      "BudgBelob": 26283237
+    },
+    {
+      "month": "2026-10",
+      "Belob": 0,
+      "BudgBelob": -15888976
+    },
+    {
+      "month": "2026-11",
+      "Belob": 0,
+      "BudgBelob": -23927135
+    },
+    {
+      "month": "2026-12",
+      "Belob": 0,
+      "BudgBelob": 43780690
+    }
+  ],
+  "topAnsvar": [
+    {
+      "name": "320 Bygningsområdet Leonardo Bandi Kaufmann",
+      "Belob": -68210059
+    },
+    {
+      "name": "310 Administration",
+      "Belob": 58756734
+    },
+    {
+      "name": "455 Fjern Uddannelse Jens Peter Ørnskov",
+      "Belob": 43210618
+    },
+    {
+      "name": "500 IT service",
+      "Belob": -33520525
+    },
+    {
+      "name": "710 Tværgående projekter og bevillinger",
+      "Belob": 23970556
+    }
+  ],
+  "topFormaal": [
+    {
+      "name": "5610 Fællesudgiftstilskud, institution",
+      "Belob": 154286261
+    },
+    {
+      "name": "5121 Administration",
+      "Belob": -86039536
+    },
+    {
+      "name": "5620 Bygningstaxametertilskud, institution",
+      "Belob": 79796564
+    },
+    {
+      "name": "6930 Præmiering, AER  LOP",
+      "Belob": 60631667
+    },
+    {
+      "name": "327 Kontor, handel og forretningsservice",
+      "Belob": -55717523
+    }
+  ],
+  "byKontoMap6": [
+    {
+      "name": "Indtægter",
+      "Belob": 1565363335,
+      "BudgBelob": 1485244309
+    },
+    {
+      "name": "Personaleomkostninger",
+      "Belob": -1164460724,
+      "BudgBelob": -1111538862
+    },
+    {
+      "name": "Driftsomkostninger",
+      "Belob": -362650676,
+      "BudgBelob": -372071747
+    },
+    {
+      "name": "Af- og nedskrivninger",
+      "Belob": -44416262,
+      "BudgBelob": -51861285
+    },
+    {
+      "name": "Finansielle poster",
+      "Belob": -12258365,
+      "BudgBelob": -13897477
+    },
+    {
+      "name": "x",
+      "Belob": 0,
+      "BudgBelob": 0
+    }
+  ]
+}

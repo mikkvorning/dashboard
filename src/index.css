@@ -1,0 +1,226 @@
+@import '@fontsource/kanit/400.css';
+@import '@fontsource/kanit/600.css';
+@import '@fontsource/titillium-web/400.css';
+@import '@fontsource/titillium-web/600.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   1. SINGLE SOURCE OF TRUTH: CSS Custom Properties (:root)
+   ========================================================================== */
+:root {
+  color-scheme: light;
+
+  /* DataDein Brand Palette Tokens */
+  --dd-marine: #4f829b;
+  --dd-marine-50: #e8eef2;
+  --dd-marine-100: #d7e1e9;
+  --dd-marine-200: #bfd0db;
+  --dd-marine-300: #9fbec9;
+  --dd-marine-400: #7ea7bc;
+  --dd-marine-500: #4f829b;
+  --dd-marine-600: #416f89;
+  --dd-marine-700: #325a72;
+  --dd-marine-800: #26475a;
+  --dd-marine-900: #1a2f3d;
+
+  --dd-energi: #fb5707;
+  --dd-energi-50: #ffe7dc;
+  --dd-energi-100: #ffd3bb;
+  --dd-energi-200: #ffb38a;
+  --dd-energi-300: #ff8f5b;
+  --dd-energi-400: #ff6c2d;
+  --dd-energi-500: #fb5707;
+  --dd-energi-600: #d64700;
+  --dd-energi-700: #aa3900;
+  --dd-energi-800: #7d2b00;
+  --dd-energi-900: #511d00;
+
+  --dd-sten: #545d62;
+  --dd-sten-50: #f0f2f3;
+  --dd-sten-100: #dde2e3;
+  --dd-sten-200: #bec6c9;
+  --dd-sten-300: #a0adb1;
+  --dd-sten-400: #78868b;
+  --dd-sten-500: #545d62;
+  --dd-sten-600: #434c50;
+  --dd-sten-700: #32393d;
+  --dd-sten-800: #232a2d;
+  --dd-sten-900: #171d1f;
+
+  --dd-hav: #70828a;
+  --dd-hav-50: #edf2f3;
+  --dd-hav-100: #dde7ea;
+  --dd-hav-200: #c0d2d7;
+  --dd-hav-300: #a2b0b6;
+  --dd-hav-400: #8c9ea6;
+  --dd-hav-500: #70828a;
+  --dd-hav-600: #5a6a71;
+  --dd-hav-700: #455159;
+  --dd-hav-800: #323c40;
+  --dd-hav-900: #1d2528;
+
+  --dd-himmel: #dee4e6;
+  --dd-himmel-50: #f9fbfb;
+  --dd-himmel-100: #eef3f4;
+  --dd-himmel-200: #e2e9eb;
+  --dd-himmel-300: #d6dde0;
+  --dd-himmel-400: #c8d2d5;
+  --dd-himmel-500: #dee4e6;
+  --dd-himmel-600: #b5bec3;
+  --dd-himmel-700: #8f9aa0;
+  --dd-himmel-800: #6c7679;
+  --dd-himmel-900: #4d5659;
+
+  --dd-havbund: #132531;
+  --dd-sky: #f8f8f8;
+  --dd-hvid: #ffffff;
+  --dd-beton: #b2b9bc;
+
+  /* Tremor Built-in UI Tokens */
+  --tremor-brand-faint: var(--dd-marine-50);
+  --tremor-brand-muted: var(--dd-marine-200);
+  --tremor-brand-subtle: var(--dd-marine-400);
+  --tremor-brand: var(--dd-marine-500);
+  --tremor-brand-emphasis: var(--dd-marine-700);
+
+  --tremor-background-muted: var(--dd-sky);
+  --tremor-background-subtle: #edf3f4;
+  --tremor-background: var(--dd-hvid);
+  --tremor-background-emphasis: var(--dd-sten-500);
+
+  --tremor-border: var(--dd-himmel-500);
+  --tremor-ring: var(--dd-himmel-500);
+
+  --tremor-content-subtle: var(--dd-sten-500);
+  --tremor-content: var(--dd-sten-500);
+  --tremor-content-emphasis: var(--dd-havbund);
+  --tremor-content-strong: var(--dd-havbund);
+}
+
+@layer components {
+  .dd-section-header {
+    font-family: 'Titillium Web', ui-sans-serif, sans-serif;
+    font-size: 1rem;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--dd-marine) !important;
+  }
+
+  .dd-table-header {
+    font-weight: bold;
+    cursor: pointer;
+  }
+}
+
+/* ==========================================================================
+   2. GLOBAL BODY & ELEMENTOR CONTAINMENT (.dd-root)
+   ========================================================================== */
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: 'Titillium Web', ui-sans-serif, sans-serif;
+  background-color: var(--dd-sky);
+  background:
+    radial-gradient(circle at top, rgba(79, 130, 155, 0.09), transparent 24%),
+    linear-gradient(
+      180deg,
+      var(--dd-hvid) 0%,
+      var(--dd-sky) 18%,
+      var(--dd-sky) 100%
+    );
+  color: var(--dd-havbund);
+}
+
+#root,
+#datadein-dashboard-root,
+.dd-root {
+  position: relative;
+  min-height: 100vh;
+  color: var(--dd-havbund);
+}
+
+/* Box-sizing normalization isolated to dashboard root */
+.dd-root,
+.dd-root *,
+.dd-root *::before,
+.dd-root *::after {
+  box-sizing: border-box;
+}
+
+/* Typography scoping */
+.dd-root h1,
+.dd-root h2,
+.dd-root h3,
+.dd-root h4,
+.dd-root h5,
+.dd-root h6,
+.dd-root .heading,
+.dd-root .heading-display {
+  font-family: 'Kanit', ui-sans-serif, sans-serif;
+}
+
+/* ==========================================================================
+   3. ANIMATIONS & RECHARTS TOOLTIP FIXES
+   ========================================================================== */
+.dd-chart-color-transition :is(path, rect, circle, polygon) {
+  transition-property: fill, stroke, opacity;
+  transition-duration: 260ms;
+  transition-timing-function: ease;
+}
+
+/* Fix Recharts Tooltip Z-Index portal layer */
+.recharts-tooltip-wrapper {
+  z-index: 9999 !important;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rowContextReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dd-row-context-enter {
+  animation: rowContextReveal 240ms ease-out both;
+}
+
+.dd-context-close-btn {
+  box-shadow:
+    inset 0 0 0 2px var(--tremor-border),
+    0 0 16px 8px color-mix(in srgb, var(--tremor-border) 60%, transparent);
+  transition-duration: 240ms;
+  transition-property: box-shadow, border-color, color, transform;
+}
+
+.dd-context-close-btn:hover {
+  box-shadow:
+    inset 0 0 0px 1px var(--dd-hav),
+    0 0 0 0 var(--dd-himmel-500);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dd-row-context-enter {
+    animation: none;
+  }
+}

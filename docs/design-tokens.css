@@ -1,0 +1,37 @@
+/*
+ * DataDein design tokens — CSS custom properties.
+ * Source: DataDein-Styleguide.pdf v1.0 (2025). Mirrors design-tokens.json.
+ * Drop these into index.css :root (or replace the placeholder --dd-* vars there).
+ */
+
+:root {
+  /* ---- Raw brand palette ---- */
+
+  /* Primary (neutral base) */
+  --dd-beton: #B2B9BC;
+  --dd-staalgraa: #7A8389;
+  --dd-lava: #3A4043;
+
+  /* Secondary */
+  --dd-hvid: #FFFFFF;
+  --dd-sky: #F8F8F8;
+  --dd-himmel: #DEE4E6;
+  --dd-hav: #A2B0B6;
+  --dd-sten: #545D62;
+  --dd-havbund: #132531;
+  --dd-marine: #4F829B;
+  --dd-energi: #FB5707;
+
+  /* ---- Semantic aliases (used across the app) ---- */
+  --dd-ink: var(--dd-havbund);       /* primary text */
+  --dd-muted: var(--dd-sten);        /* secondary/muted text */
+  --dd-page: var(--dd-sky);          /* page background */
+  --dd-surface: var(--dd-hvid);      /* card/surface background */
+  --dd-border: var(--dd-himmel);     /* dividers, borders */
+  --dd-accent: var(--dd-marine);     /* primary accent: links, active states, primary chart series */
+  --dd-highlight: var(--dd-energi);  /* sparing use: CTAs, key deltas, selected states */
+
+  /* ---- Typography ---- */
+  --dd-font-primary: 'Kanit', ui-sans-serif, sans-serif;      /* large titles/headings ONLY */
+  --dd-font-secondary: 'Titilium Web', ui-sans-serif, sans-serif; /* body copy, default */
+}

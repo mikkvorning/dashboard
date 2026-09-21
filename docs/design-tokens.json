@@ -1,0 +1,71 @@
+{
+  "$schema": "informal — DataDein design tokens, source: DataDein-Styleguide.pdf v1.0 (2025)",
+  "meta": {
+    "brand": "DataDein",
+    "version": "1.0",
+    "convertedFrom": "DataDein-Styleguide.pdf",
+    "coreWords": [
+      "Innovation",
+      "Effektivitet",
+      "Datasikkerhed",
+      "Skræddersyede løsninger",
+      "Troværdighed"
+    ]
+  },
+  "colors": {
+    "primary": {
+      "beton": { "hex": "#B2B9BC", "rgb": "178,185,188", "role": "Light neutral surface, secondary text on dark" },
+      "staalgraa": { "hex": "#7A8389", "rgb": "122,131,137", "role": "Mid neutral, borders, muted UI elements" },
+      "lava": { "hex": "#3A4043", "rgb": "58,64,67", "role": "Dark neutral, near-black text alternative" }
+    },
+    "secondary": {
+      "hvid": { "hex": "#FFFFFF", "rgb": "255,255,255", "role": "Card/surface background" },
+      "sky": { "hex": "#F8F8F8", "rgb": "248,248,248", "role": "Page background" },
+      "himmel": { "hex": "#DEE4E6", "rgb": "222,228,230", "role": "Borders, dividers, subtle fills" },
+      "hav": { "hex": "#A2B0B6", "rgb": "162,176,182", "role": "Secondary surface / muted accent" },
+      "sten": { "hex": "#545D62", "rgb": "84,93,98", "role": "Muted / secondary text" },
+      "havbund": { "hex": "#132531", "rgb": "19,37,49", "role": "Primary text (ink), darkest brand color" },
+      "marine": { "hex": "#4F829B", "rgb": "79,130,155", "role": "Primary accent — links, active states, primary chart series" },
+      "energi": { "hex": "#FB5707", "rgb": "251,87,7", "role": "Highlight accent — CTAs, key deltas, selected states. Use sparingly, not a rotation color." }
+    },
+    "usageNotes": [
+      "Avoid pairing colors of similar mid-tone value; prefer clear light/dark contrast.",
+      "Energi is the only saturated color in the palette — reserve it for the single most important element in a view.",
+      "For multi-series charts, differentiate primarily by value (light vs dark) rather than hue, since the palette is intentionally low-saturation."
+    ]
+  },
+  "typography": {
+    "primary": {
+      "family": "Kanit",
+      "source": "Google Fonts",
+      "weights": ["400"],
+      "usage": "Large titles and key headings only. Not for body copy or long text blocks."
+    },
+    "secondary": {
+      "family": "Titilium Web",
+      "source": "Google Fonts",
+      "weights": ["400", "600"],
+      "usage": "Body copy, longer text passages. SemiBold (600) for secondary headings and emphasis."
+    }
+  },
+  "logo": {
+    "assets": ["primary logo (wordmark + figure)", "color variations for contrast", "logo figure (icon-only, for favicon/detail use)"],
+    "correctUse": [
+      "Sufficient contrast between logo and background",
+      "Use on dark, mid-grey, or light-grey solid backgrounds with the matching logo variant"
+    ],
+    "incorrectUse": [
+      "Placing on busy photo or textured backgrounds",
+      "Low-contrast placements (e.g. similar mid-tones)",
+      "Distorting, skewing, or stretching",
+      "Recoloring outside defined variants",
+      "Crowding — logo needs clear space from other elements",
+      "Placing directly beside another brand's logo"
+    ]
+  },
+  "imagery": {
+    "toneOfVoice": "muted, professional grey/blue neutrals with occasional warm accent",
+    "composition": ["clean lines", "symmetry", "sense of depth", "deliberate movement/blur"],
+    "notes": "Blur is also used to anonymize people in the background of photos. Mood balances calm and activity."
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "generatedAt": "2026-09-11T10:13:17.996Z",
+  "range": "1Y",
+  "kpis": {
+    "belob": 30449634,
+    "budgBelob": -9491525,
+    "ae": 2884.96,
+    "budgAe": 3064.26,
+    "timer": 684473,
+    "elever": 3200
+  },
+  "monthly": [
+    {
+      "month": "2024-12",
+      "Belob": 34283438,
+      "BudgBelob": -34387775
+    },
+    {
+      "month": "2025-01",
+      "Belob": -9472510,
+      "BudgBelob": -7227028
+    },
+    {
+      "month": "2025-02",
+      "Belob": -19801558,
+      "BudgBelob": -21010508
+    },
+    {
+      "month": "2025-03",
+      "Belob": 31097620,
+      "BudgBelob": 29907530
+    },
+    {
+      "month": "2025-04",
+      "Belob": 10059030,
+      "BudgBelob": -6685476
+    },
+    {
+      "month": "2025-05",
+      "Belob": -23649026,
+      "BudgBelob": -26644908
+    },
+    {
+      "month": "2025-06",
+      "Belob": 4793931,
+      "BudgBelob": 19855023
+    },
+    {
+      "month": "2025-07",
+      "Belob": -26901736,
+      "BudgBelob": -6412116
+    },
+    {
+      "month": "2025-08",
+      "Belob": -30863398,
+      "BudgBelob": -24763297
+    },
+    {
+      "month": "2025-09",
+      "Belob": 32719367,
+      "BudgBelob": 18561126
+    },
+    {
+      "month": "2025-10",
+      "Belob": 21100531,
+      "BudgBelob": -2231159
+    },
+    {
+      "month": "2025-12",
+      "Belob": 7083945,
+      "BudgBelob": 51547063
+    }
+  ],
+  "topAnsvar": [
+    {
+      "name": "320 Bygningsområdet Leonardo Bandi Kaufmann",
+      "Belob": -32687935
+    },
+    {
+      "name": "310 Administration",
+      "Belob": 32049660
+    },
+    {
+      "name": "455 Fjern Uddannelse Jens Peter Ørnskov",
+      "Belob": 28735035
+    },
+    {
+      "name": "710 Tværgående projekter og bevillinger",
+      "Belob": 15561660
+    },
+    {
+      "name": "530 Rektor Magnus Pedersen",
+      "Belob": 13828613
+    }
+  ],
+  "topFormaal": [
+    {
+      "name": "5610 Fællesudgiftstilskud, institution",
+      "Belob": 80581692
+    },
+    {
+      "name": "5620 Bygningstaxametertilskud, institution",
+      "Belob": 44281635
+    },
+    {
+      "name": "5121 Administration",
+      "Belob": -44273959
+    },
+    {
+      "name": "6930 Præmiering, AER  LOP",
+      "Belob": 42176023
+    },
+    {
+      "name": "3010 Højere Handelseksamen",
+      "Belob": 23409094
+    }
+  ],
+  "byKontoMap6": [
+    {
+      "name": "Indtægter",
+      "Belob": 702292940,
+      "BudgBelob": 692012154
+    },
+    {
+      "name": "Personaleomkostninger",
+      "Belob": -479913501,
+      "BudgBelob": -502933809
+    },
+    {
+      "name": "Driftsomkostninger",
+      "Belob": -161707509,
+      "BudgBelob": -167534600
+    },
+    {
+      "name": "Af- og nedskrivninger",
+      "Belob": -24336686,
+      "BudgBelob": -25932342
+    },
+    {
+      "name": "Finansielle poster",
+      "Belob": -5885608,
+      "BudgBelob": -5102928
+    },
+    {
+      "name": "x",
+      "Belob": 0,
+      "BudgBelob": 0
+    }
+  ]
+}

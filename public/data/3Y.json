@@ -1,0 +1,270 @@
+{
+  "generatedAt": "2026-09-11T10:13:18.073Z",
+  "range": "3Y",
+  "kpis": {
+    "belob": -18775838,
+    "budgBelob": -20316640,
+    "ae": 8514.43,
+    "budgAe": 8796.92,
+    "timer": 1379778,
+    "elever": 8942
+  },
+  "monthly": [
+    {
+      "month": "2022-12",
+      "Belob": -11701093,
+      "BudgBelob": 0
+    },
+    {
+      "month": "2023-01",
+      "Belob": -21030314,
+      "BudgBelob": -23457439
+    },
+    {
+      "month": "2023-02",
+      "Belob": -20243558,
+      "BudgBelob": -10655498
+    },
+    {
+      "month": "2023-03",
+      "Belob": 42211610,
+      "BudgBelob": 9446187
+    },
+    {
+      "month": "2023-04",
+      "Belob": 8139194,
+      "BudgBelob": 14963917
+    },
+    {
+      "month": "2023-05",
+      "Belob": -16938714,
+      "BudgBelob": 25849144
+    },
+    {
+      "month": "2023-06",
+      "Belob": 5650526,
+      "BudgBelob": -32687154
+    },
+    {
+      "month": "2023-07",
+      "Belob": -5840906,
+      "BudgBelob": -15760788
+    },
+    {
+      "month": "2023-08",
+      "Belob": -20859990,
+      "BudgBelob": 15394281
+    },
+    {
+      "month": "2023-09",
+      "Belob": 15665536,
+      "BudgBelob": 25595231
+    },
+    {
+      "month": "2023-10",
+      "Belob": 5552184,
+      "BudgBelob": 13525941
+    },
+    {
+      "month": "2023-11",
+      "Belob": -23814142,
+      "BudgBelob": 25765350
+    },
+    {
+      "month": "2023-12",
+      "Belob": 32319287,
+      "BudgBelob": 12020373
+    },
+    {
+      "month": "2024-01",
+      "Belob": -7736550,
+      "BudgBelob": -7998325
+    },
+    {
+      "month": "2024-02",
+      "Belob": -14413681,
+      "BudgBelob": -22996066
+    },
+    {
+      "month": "2024-03",
+      "Belob": 26801344,
+      "BudgBelob": -24717894
+    },
+    {
+      "month": "2024-04",
+      "Belob": 5272180,
+      "BudgBelob": -9558543
+    },
+    {
+      "month": "2024-05",
+      "Belob": -20804923,
+      "BudgBelob": 25631221
+    },
+    {
+      "month": "2024-06",
+      "Belob": 5809235,
+      "BudgBelob": -11513385
+    },
+    {
+      "month": "2024-07",
+      "Belob": -8927320,
+      "BudgBelob": 14326669
+    },
+    {
+      "month": "2024-08",
+      "Belob": -25823569,
+      "BudgBelob": -21119967
+    },
+    {
+      "month": "2024-09",
+      "Belob": 20363508,
+      "BudgBelob": -22181736
+    },
+    {
+      "month": "2024-10",
+      "Belob": 955733,
+      "BudgBelob": 24625749
+    },
+    {
+      "month": "2024-11",
+      "Belob": -19831049,
+      "BudgBelob": -15322383
+    },
+    {
+      "month": "2024-12",
+      "Belob": 34283438,
+      "BudgBelob": -34387775
+    },
+    {
+      "month": "2025-01",
+      "Belob": -9472510,
+      "BudgBelob": -7227028
+    },
+    {
+      "month": "2025-02",
+      "Belob": -19801558,
+      "BudgBelob": -21010508
+    },
+    {
+      "month": "2025-03",
+      "Belob": 31097620,
+      "BudgBelob": 29907530
+    },
+    {
+      "month": "2025-04",
+      "Belob": 10059030,
+      "BudgBelob": -6685476
+    },
+    {
+      "month": "2025-05",
+      "Belob": -23649026,
+      "BudgBelob": -26644908
+    },
+    {
+      "month": "2025-06",
+      "Belob": 4793931,
+      "BudgBelob": 19855023
+    },
+    {
+      "month": "2025-07",
+      "Belob": -26901736,
+      "BudgBelob": -6412116
+    },
+    {
+      "month": "2025-08",
+      "Belob": -30863398,
+      "BudgBelob": -24763297
+    },
+    {
+      "month": "2025-09",
+      "Belob": 32719367,
+      "BudgBelob": 18561126
+    },
+    {
+      "month": "2025-10",
+      "Belob": 21100531,
+      "BudgBelob": -2231159
+    },
+    {
+      "month": "2025-12",
+      "Belob": 7083945,
+      "BudgBelob": 51547063
+    }
+  ],
+  "topAnsvar": [
+    {
+      "name": "310 Administration",
+      "Belob": 60713901
+    },
+    {
+      "name": "320 Bygningsområdet Leonardo Bandi Kaufmann",
+      "Belob": -57307601
+    },
+    {
+      "name": "455 Fjern Uddannelse Jens Peter Ørnskov",
+      "Belob": 44444314
+    },
+    {
+      "name": "710 Tværgående projekter og bevillinger",
+      "Belob": 23970556
+    },
+    {
+      "name": "500 IT service",
+      "Belob": -20135475
+    }
+  ],
+  "topFormaal": [
+    {
+      "name": "5610 Fællesudgiftstilskud, institution",
+      "Belob": 154286261
+    },
+    {
+      "name": "5121 Administration",
+      "Belob": -84208030
+    },
+    {
+      "name": "5620 Bygningstaxametertilskud, institution",
+      "Belob": 79796564
+    },
+    {
+      "name": "6930 Præmiering, AER  LOP",
+      "Belob": 60083832
+    },
+    {
+      "name": "3315 EUX, merkantile uddannelser",
+      "Belob": 41911598
+    }
+  ],
+  "byKontoMap6": [
+    {
+      "name": "Indtægter",
+      "Belob": 1254913023,
+      "BudgBelob": 1255954344
+    },
+    {
+      "name": "Personaleomkostninger",
+      "Belob": -901765091,
+      "BudgBelob": -923671643
+    },
+    {
+      "name": "Driftsomkostninger",
+      "Belob": -316845226,
+      "BudgBelob": -302178524
+    },
+    {
+      "name": "Af- og nedskrivninger",
+      "Belob": -42612764,
+      "BudgBelob": -39755375
+    },
+    {
+      "name": "Finansielle poster",
+      "Belob": -12465781,
+      "BudgBelob": -10665442
+    },
+    {
+      "name": "x",
+      "Belob": 0,
+      "BudgBelob": 0
+    }
+  ]
+}
