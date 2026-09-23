@@ -101,7 +101,7 @@
 }
 
 @layer components {
-  .dd-section-header {
+  .dd-root .dd-section-header {
     font-family: 'Titillium Web', ui-sans-serif, sans-serif;
     font-size: 1rem;
     line-height: 1.4;
@@ -111,7 +111,7 @@
     color: var(--dd-marine) !important;
   }
 
-  .dd-table-header {
+  .dd-root .dd-table-header {
     font-weight: bold;
     cursor: pointer;
   }
@@ -168,14 +168,14 @@ body {
 /* ==========================================================================
    3. ANIMATIONS & RECHARTS TOOLTIP FIXES
    ========================================================================== */
-.dd-chart-color-transition :is(path, rect, circle, polygon) {
+.dd-root .dd-chart-color-transition :is(path, rect, circle, polygon) {
   transition-property: fill, stroke, opacity;
   transition-duration: 260ms;
   transition-timing-function: ease;
 }
 
 /* Fix Recharts Tooltip Z-Index portal layer */
-.recharts-tooltip-wrapper {
+.dd-root .recharts-tooltip-wrapper {
   z-index: 9999 !important;
 }
 
@@ -201,11 +201,11 @@ body {
   }
 }
 
-.dd-row-context-enter {
+.dd-root .dd-row-context-enter {
   animation: rowContextReveal 240ms ease-out both;
 }
 
-.dd-context-close-btn {
+.dd-root .dd-context-close-btn {
   box-shadow:
     inset 0 0 0 2px var(--tremor-border),
     0 0 16px 8px color-mix(in srgb, var(--tremor-border) 60%, transparent);
@@ -213,14 +213,14 @@ body {
   transition-property: box-shadow, border-color, color, transform;
 }
 
-.dd-context-close-btn:hover {
+.dd-root .dd-context-close-btn:hover {
   box-shadow:
     inset 0 0 0px 1px var(--dd-hav),
     0 0 0 0 var(--dd-himmel-500);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dd-row-context-enter {
+  .dd-root .dd-row-context-enter {
     animation: none;
   }
 }

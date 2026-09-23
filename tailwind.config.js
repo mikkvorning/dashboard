@@ -37,6 +37,7 @@ const tremorShades = '50|100|200|300|400|500|600|700|800|900|950';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+  important: '.dd-root',
   darkMode: 'class',
   content: [
     './index.html',
