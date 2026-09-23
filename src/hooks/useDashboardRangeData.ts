@@ -77,7 +77,13 @@ export function useDashboardRangeData({
       return;
     }
 
-    setDisplayedRange(selectedRange);
+    const commitTimer = window.setTimeout(() => {
+      setDisplayedRange((previous) =>
+        previous === selectedRange ? previous : selectedRange,
+      );
+    }, 0);
+
+    return () => window.clearTimeout(commitTimer);
   }, [canCommitRange, displayedRange, rangeCache, selectedRange]);
 
   const clearError = useCallback(() => {

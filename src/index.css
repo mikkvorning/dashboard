@@ -3,7 +3,9 @@
 @import '@fontsource/titillium-web/400.css';
 @import '@fontsource/titillium-web/600.css';
 
-@tailwind base;
+.dd-root {
+  @tailwind base;
+}
 @tailwind components;
 @tailwind utilities;
 
