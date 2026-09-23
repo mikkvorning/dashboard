@@ -4,10 +4,12 @@ import { defineConfig, loadEnv } from 'vite';
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
+  const isVercel = env.VERCEL === '1' || Boolean(env.VERCEL_ENV);
+  const defaultBase =
+    mode === 'production' && !isVercel ? '/dashboard-assets/' : '/';
 
   return {
     plugins: [react()],
-    base:
-      mode === 'production' ? '/dashboard-assets/' : env.VITE_ASSET_BASE || '/',
+    base: env.VITE_ASSET_BASE || defaultBase,
   };
 });
