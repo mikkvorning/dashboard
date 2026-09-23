@@ -1,6 +1,9 @@
 import type { ComponentProps, ReactNode } from 'react';
 
-import { Card, Metric, SparkAreaChart, Text } from '@tremor/react';
+import { Metric, SparkAreaChart } from '@tremor/react';
+
+import { Card } from './ui/card';
+import { Text } from './ui/text';
 
 type KpiSparkChartProps = ComponentProps<typeof SparkAreaChart>;
 

@@ -45,6 +45,9 @@ export default {
     './node_modules/@tremor/**/*.{js,ts,jsx,tsx}',
   ],
   safelist: [
+    'rounded-tremor-small',
+    'rounded-tremor-default',
+    'rounded-tremor-full',
     {
       pattern: new RegExp(
         `^(bg|text|border|ring|stroke|fill)-((?:${tremorColors})|(?:${brandColors}))(-(${tremorShades}))?$`,
@@ -167,6 +170,11 @@ export default {
       fontFamily: {
         display: ['Kanit', 'ui-sans-serif', 'sans-serif'],
         body: ['Titillium Web', 'ui-sans-serif', 'sans-serif'],
+      },
+      borderRadius: {
+        'tremor-small': '0.375rem',
+        'tremor-default': '0.5rem',
+        'tremor-full': '9999px',
       },
     },
   },

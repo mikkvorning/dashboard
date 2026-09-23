@@ -1,28 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import {
-  AreaChart,
-  Badge,
-  BadgeDelta,
-  BarChart,
-  Button,
-  Card,
-  DonutChart,
-  Flex,
-  Grid,
-  Subtitle,
-  Tab,
-  TabGroup,
-  TabList,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
-  Text,
-  Title,
-} from '@tremor/react';
+import { AreaChart, BarChart, DonutChart } from '@tremor/react';
 
 import {
   createChartSelectionTooltips,
@@ -46,6 +24,22 @@ import { FlipCard, MIN_LOAD_DELAY } from './components/FlipCard';
 import { ChevronUpIcon } from './components/icons/ChevronUpIcon';
 import { SortIndicatorIcon } from './components/icons/SortIndicatorIcon';
 import { KpiCard } from './components/KpiCard';
+import { Tabs, TabsList, TabsTrigger } from './components/ui/tabs';
+import { Badge, BadgeDelta } from './components/ui/badge';
+import { Button } from './components/ui/button';
+import { Flex, Grid } from './components/ui/layout';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderButton,
+  TableHeaderCell,
+  TableRoot,
+  TableRow,
+} from './components/ui/table';
+import { Card } from './components/ui/card';
+import { Subtitle, Text, Title } from './components/ui/text';
 
 type ResultRowVariant = 'line' | 'subtotal' | 'total';
 
@@ -66,6 +60,9 @@ type ResultSortKey = 'default' | 'realized' | 'budget' | 'diff' | 'diffPct';
 // period as the source of truth for both data fetching and chart state.
 const rangeOptions: DashboardRangeKey[] = ['1Y', '3Y', 'ALL'];
 const TOTAL_FLIP_CARDS = 10;
+
+const isDashboardRangeKey = (value: string): value is DashboardRangeKey =>
+  rangeOptions.includes(value as DashboardRangeKey);
 
 function App() {
   const [selectedRange, setSelectedRange] = useState<DashboardRangeKey>('1Y');
@@ -459,7 +456,16 @@ function App() {
 
   const budgetDelta = activeData.kpis.belob - activeData.kpis.budgBelob;
   const budgetDeltaType = budgetDelta >= 0 ? 'increase' : 'decrease';
-  const selectedRangeIndex = rangeOptions.indexOf(selectedRange);
+  const handleRangeValueChange = useCallback(
+    (value: string) => {
+      if (!isDashboardRangeKey(value)) {
+        return;
+      }
+
+      handleRangeChange(value);
+    },
+    [handleRangeChange],
+  );
 
   const chartTooltips = useMemo(
     () => createChartSelectionTooltips(stageHoverCandidate),
@@ -490,9 +496,9 @@ function App() {
           </div>
           <Card className='dd-grid-enter flex gap-4'>
             <div>
-              <Text className='dd-section-header font-bold mb-0'>
+              <Title className='dd-section-header mb-0'>
                 Rapporteringsperiode
-              </Text>
+              </Title>
               {activeData.generatedAt ? (
                 <Text className='text-sm mt-0 text-tremor-content-subtle'>
                   Genereret{' '}
@@ -501,19 +507,19 @@ function App() {
                 </Text>
               ) : null}
               <div className='flex flex-row  gap-4'>
-                <TabGroup
-                  className='w-[max-content]'
-                  index={selectedRangeIndex}
-                  onIndexChange={(index) =>
-                    handleRangeChange(rangeOptions[index] ?? selectedRange)
-                  }
+                <Tabs
+                  className='w-max'
+                  value={selectedRange}
+                  onValueChange={handleRangeValueChange}
                 >
-                  <TabList variant='solid'>
+                  <TabsList variant='solid' className='w-fit'>
                     {rangeOptions.map((range) => (
-                      <Tab key={range}>{formatRangeLabel(range)}</Tab>
+                      <TabsTrigger key={range} value={range}>
+                        {formatRangeLabel(range)}
+                      </TabsTrigger>
                     ))}
-                  </TabList>
-                </TabGroup>
+                  </TabsList>
+                </Tabs>
                 <Badge
                   className='my-1 w-30'
                   color={isLoading ? 'amber' : 'emerald'}
@@ -706,31 +712,26 @@ function App() {
           onBackfaceReady={handleCardBackfaceReady}
         >
           <Card className='h-full'>
-            <Title className='dd-section-header font-bold'>
-              Resultatopgørelse
-            </Title>
+            <Title className='dd-section-header'>Resultatopgørelse</Title>
             <Text className='font-body text-dd-body text-tremor-content-subtle'>
               Realiseret vs. budget pr. regnskabspost for den valgte periode
             </Text>
             <div className='mt-5'>
-              <div className='overflow-x-auto'>
+              <TableRoot>
                 <Table>
                   <TableHead>
                     <TableRow>
                       <TableHeaderCell>
-                        <button
-                          type='button'
-                          className={`dd-table-header inline-flex items-center gap-1.5 appearance-none border-0 bg-transparent p-0 text-left shadow-none outline-none ring-0 transition-colors`}
+                        <TableHeaderButton
                           onClick={() => handleResultSort('default')}
                           aria-label='Nulstil sortering til standardrækkefølge'
                         >
                           Regnskabspost
-                        </button>
+                        </TableHeaderButton>
                       </TableHeaderCell>
                       <TableHeaderCell className='text-right'>
-                        <button
-                          type='button'
-                          className={`dd-table-header inline-flex items-center gap-1.5 appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 transition-colors`}
+                        <TableHeaderButton
+                          align='right'
                           onClick={() => handleResultSort('realized')}
                           aria-label='Sorter efter realiseret'
                         >
@@ -740,12 +741,11 @@ function App() {
                             activeSortKey={resultSort.key}
                             direction={resultSort.direction}
                           />
-                        </button>
+                        </TableHeaderButton>
                       </TableHeaderCell>
                       <TableHeaderCell className='text-right'>
-                        <button
-                          type='button'
-                          className={`dd-table-header inline-flex items-center gap-1.5 appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 transition-colors`}
+                        <TableHeaderButton
+                          align='right'
                           onClick={() => handleResultSort('budget')}
                           aria-label='Sorter efter budget'
                         >
@@ -755,12 +755,11 @@ function App() {
                             activeSortKey={resultSort.key}
                             direction={resultSort.direction}
                           />
-                        </button>
+                        </TableHeaderButton>
                       </TableHeaderCell>
                       <TableHeaderCell className='text-right'>
-                        <button
-                          type='button'
-                          className={`dd-table-header inline-flex items-center gap-1.5 appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 transition-colors`}
+                        <TableHeaderButton
+                          align='right'
                           onClick={() => handleResultSort('diff')}
                           aria-label='Sorter efter afvigelse'
                         >
@@ -770,12 +769,11 @@ function App() {
                             activeSortKey={resultSort.key}
                             direction={resultSort.direction}
                           />
-                        </button>
+                        </TableHeaderButton>
                       </TableHeaderCell>
                       <TableHeaderCell className='text-right'>
-                        <button
-                          type='button'
-                          className={`dd-table-header inline-flex items-center gap-1.5 appearance-none border-0 bg-transparent p-0 shadow-none outline-none ring-0 transition-colors`}
+                        <TableHeaderButton
+                          align='right'
                           onClick={() => handleResultSort('diffPct')}
                           aria-label='Sorter efter afvigelse i procent'
                         >
@@ -785,7 +783,7 @@ function App() {
                             activeSortKey={resultSort.key}
                             direction={resultSort.direction}
                           />
-                        </button>
+                        </TableHeaderButton>
                       </TableHeaderCell>
                     </TableRow>
                   </TableHead>
@@ -921,7 +919,7 @@ function App() {
                                   className='mt-4 gap-3'
                                 >
                                   <Card className='p-3'>
-                                    <Text className='dd-section-header font-bold m-0'>
+                                    <Text className='dd-section-header m-0'>
                                       Afvigelsesformel
                                     </Text>
                                     <Text className='mt-2 text-tremor-content-emphasis'>
@@ -1111,7 +1109,7 @@ function App() {
                     })}
                   </TableBody>
                 </Table>
-              </div>
+              </TableRoot>
             </div>
           </Card>
         </FlipCard>
@@ -1128,9 +1126,7 @@ function App() {
             onBackfaceReady={handleCardBackfaceReady}
           >
             <Card className='h-full'>
-              <Title className='dd-section-header font-bold'>
-                Beløbtrend pr. måned
-              </Title>
+              <Title className='dd-section-header'>Beløbtrend pr. måned</Title>
               <Text className='font-body text-dd-body text-tremor-content-subtle'>
                 Realiseret forbrug over tid for den valgte periode
               </Text>
@@ -1172,9 +1168,7 @@ function App() {
             onBackfaceReady={handleCardBackfaceReady}
           >
             <Card className='h-full'>
-              <Title className='dd-section-header font-bold'>
-                Budget vs. Realiseret
-              </Title>
+              <Title className='dd-section-header'>Budget vs. Realiseret</Title>
               <Text className='font-body text-dd-body text-tremor-content-subtle'>
                 Sammenligning af realiseret beløb og budget pr. måned
               </Text>
@@ -1219,9 +1213,7 @@ function App() {
             onBackfaceReady={handleCardBackfaceReady}
           >
             <Card className='h-full'>
-              <Title className='dd-section-header font-bold'>
-                Top Ansvarsområder
-              </Title>
+              <Title className='dd-section-header'>Top Ansvarsområder</Title>
               <Text className='font-body text-dd-body text-tremor-content-subtle'>
                 Klik på en søjle for at vælge et fokuspunkt
               </Text>
@@ -1268,7 +1260,7 @@ function App() {
             onBackfaceReady={handleCardBackfaceReady}
           >
             <Card className='h-full'>
-              <Title className='dd-section-header font-bold'>Top Formål</Title>
+              <Title className='dd-section-header'>Top Formål</Title>
               <Text className='font-body text-dd-body text-tremor-content-subtle'>
                 Klik på en søjle for at vælge et fokuspunkt
               </Text>
@@ -1315,9 +1307,7 @@ function App() {
             onBackfaceReady={handleCardBackfaceReady}
           >
             <Card className='h-full'>
-              <Title className='dd-section-header font-bold'>
-                Omkostningsfordeling
-              </Title>
+              <Title className='dd-section-header'>Omkostningsfordeling</Title>
               <Text className='font-body text-dd-body text-tremor-content-subtle'>
                 Andel af samlede omkostninger (ekskl. indtægter)
               </Text>
