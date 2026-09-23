@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { AreaChart, BarChart, DonutChart } from '@tremor/react';
 
@@ -21,40 +21,18 @@ import {
   getScale,
 } from './utils/format';
 import { FlipCard, MIN_LOAD_DELAY } from './components/FlipCard';
-import { ChevronUpIcon } from './components/icons/ChevronUpIcon';
-import { SortIndicatorIcon } from './components/icons/SortIndicatorIcon';
 import { KpiCard } from './components/KpiCard';
+import {
+  ResultTable,
+  type ResultRowVariant,
+  type ResultTableRow,
+} from './components/ResultTable';
 import { Tabs, TabsList, TabsTrigger } from './components/ui/tabs';
 import { Badge, BadgeDelta } from './components/ui/badge';
 import { Button } from './components/ui/button';
-import { Flex, Grid } from './components/ui/layout';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeaderButton,
-  TableHeaderCell,
-  TableRoot,
-  TableRow,
-} from './components/ui/table';
+import { Grid } from './components/ui/layout';
 import { Card } from './components/ui/card';
 import { Subtitle, Text, Title } from './components/ui/text';
-
-type ResultRowVariant = 'line' | 'subtotal' | 'total';
-
-type ResultTableRow = {
-  id: string;
-  name: string;
-  realized: number;
-  budget: number;
-  diff: number;
-  diffPct: number;
-  variant: ResultRowVariant;
-  sourceCategory?: string;
-};
-
-type ResultSortKey = 'default' | 'realized' | 'budget' | 'diff' | 'diffPct';
 
 // Keep the range switcher centralized and explicit. The app uses the selected
 // period as the source of truth for both data fetching and chart state.
@@ -66,17 +44,6 @@ const isDashboardRangeKey = (value: string): value is DashboardRangeKey =>
 
 function App() {
   const [selectedRange, setSelectedRange] = useState<DashboardRangeKey>('1Y');
-  const [selectedResultRowId, setSelectedResultRowId] = useState<string | null>(
-    null,
-  );
-  const [hoveredResultRowId, setHoveredResultRowId] = useState<string | null>(
-    null,
-  );
-  const [resultSort, setResultSort] = useState<{
-    key: ResultSortKey;
-    direction: 'asc' | 'desc';
-  }>({ key: 'default', direction: 'desc' });
-  const lastResultTriggerRef = useRef<HTMLElement | null>(null);
   const {
     selection,
     setSelection,
@@ -186,6 +153,7 @@ function App() {
       diffPct,
       variant,
       sourceCategory,
+      insight: null,
     };
   };
 
@@ -257,193 +225,89 @@ function App() {
     'total',
   );
 
-  const resultTableRows = useMemo(
-    () => [
+  const resultTableRows = useMemo(() => {
+    const lineRows = [
       indtaegterRow,
       personaleRow,
       driftRow,
-      driftsresultatRow,
       afskrivningerRow,
-      resultatFoerFinansielleRow,
       finansielleRow,
-      resultatRow,
-    ],
-    [
-      afskrivningerRow,
-      driftRow,
-      driftsresultatRow,
-      finansielleRow,
-      indtaegterRow,
-      personaleRow,
-      resultatFoerFinansielleRow,
-      resultatRow,
-    ],
-  );
-
-  const handleResultSort = useCallback((key: ResultSortKey) => {
-    setResultSort((previous) => {
-      if (key === 'default') {
-        return { key: 'default', direction: 'desc' };
-      }
-
-      if (previous.key === key) {
-        return {
-          key,
-          direction: previous.direction === 'desc' ? 'asc' : 'desc',
-        };
-      }
-
-      return { key, direction: 'desc' };
-    });
-  }, []);
-
-  const sortedResultTableRows = useMemo(() => {
-    if (resultSort.key === 'default') {
-      return resultTableRows;
-    }
-
-    const lineRows = resultTableRows.filter((row) => row.variant === 'line');
-    const nonLineRows = resultTableRows.filter((row) => row.variant !== 'line');
-
-    const sortedLines = [...lineRows].sort((a, b) => {
-      const directionMultiplier = resultSort.direction === 'asc' ? 1 : -1;
-      const metric =
-        resultSort.key === 'realized'
-          ? 'realized'
-          : resultSort.key === 'budget'
-            ? 'budget'
-            : resultSort.key === 'diff'
-              ? 'diff'
-              : 'diffPct';
-      const left = a[metric];
-      const right = b[metric];
-
-      if (left === right) return 0;
-      return left > right ? directionMultiplier : -directionMultiplier;
-    });
-
-    return [...sortedLines, ...nonLineRows];
-  }, [resultSort.direction, resultSort.key, resultTableRows]);
-
-  const selectedResultRow = useMemo(
-    () => resultTableRows.find((row) => row.id === selectedResultRowId) ?? null,
-    [resultTableRows, selectedResultRowId],
-  );
-
-  const selectedResultCategory = selectedResultRow?.sourceCategory;
-  const selectedCategoryPoint = selectedResultCategory
-    ? activeData.byKontoMap6.find(
-        (point) => point.name === selectedResultCategory,
-      )
-    : null;
-
-  const selectedCategoryShare =
-    selectedCategoryPoint && costCompositionTotal > 0
-      ? (Math.abs(selectedCategoryPoint.Belob) / costCompositionTotal) * 100
-      : null;
-
-  const topAnsvarPreview = activeData.topAnsvar.slice(0, 3);
-  const topFormaalPreview = activeData.topFormaal.slice(0, 3);
-
-  const lineResultRows = useMemo(
-    () => resultTableRows.filter((row) => row.variant === 'line'),
-    [resultTableRows],
-  );
-
-  const totalAbsLineVariance = useMemo(
-    () => lineResultRows.reduce((sum, row) => sum + Math.abs(row.diff), 0),
-    [lineResultRows],
-  );
-
-  const varianceRankByRowId = useMemo(() => {
-    const rankedRows = [...lineResultRows].sort(
+    ];
+    const totalAbsLineVariance = lineRows.reduce(
+      (sum, row) => sum + Math.abs(row.diff),
+      0,
+    );
+    const rankedRows = [...lineRows].sort(
       (left, right) => Math.abs(right.diff) - Math.abs(left.diff),
     );
-    return new Map(rankedRows.map((row, index) => [row.id, index + 1]));
-  }, [lineResultRows]);
-
-  const selectedVarianceImpactPct = useMemo(() => {
-    if (
-      !selectedResultRow ||
-      selectedResultRow.variant !== 'line' ||
-      totalAbsLineVariance === 0
-    ) {
-      return null;
-    }
-
-    return (Math.abs(selectedResultRow.diff) / totalAbsLineVariance) * 100;
-  }, [selectedResultRow, totalAbsLineVariance]);
-
-  const selectedVarianceRank =
-    selectedResultRow?.variant === 'line'
-      ? (varianceRankByRowId.get(selectedResultRow.id) ?? null)
-      : null;
-
-  const selectedBudgetPrecision = selectedResultRow
-    ? Math.max(0, 100 - Math.abs(selectedResultRow.diffPct))
-    : null;
-
-  const netPeriodDelta = activeData.kpis.belob - activeData.kpis.budgBelob;
-
-  const selectedContributionToNetDelta = useMemo(() => {
-    if (!selectedResultRow || netPeriodDelta === 0) {
-      return null;
-    }
-
-    return (selectedResultRow.diff / netPeriodDelta) * 100;
-  }, [netPeriodDelta, selectedResultRow]);
-
-  const monthlyPressureSummary = useMemo(() => {
-    if (monthSeries.length === 0) {
-      return null;
-    }
-
-    const monthlyVariance = monthSeries.map((point) => ({
-      monthLabel: point.monthLabel,
-      delta: point.Belob - point.BudgBelob,
-    }));
-
-    const monthsBetterThanBudget = monthlyVariance.filter(
-      (point) => point.delta > 0,
-    ).length;
-    const monthsWorseThanBudget = monthlyVariance.filter(
-      (point) => point.delta < 0,
-    ).length;
-
-    const bestMonth = monthlyVariance.reduce((best, current) =>
-      current.delta > best.delta ? current : best,
+    const rankById = new Map(
+      rankedRows.map((row, index) => [row.id, index + 1]),
     );
-    const worstMonth = monthlyVariance.reduce((worst, current) =>
-      current.delta < worst.delta ? current : worst,
-    );
+    const netDelta = activeData.kpis.belob - activeData.kpis.budgBelob;
 
-    return {
-      monthsBetterThanBudget,
-      monthsWorseThanBudget,
-      bestMonth,
-      worstMonth,
-    };
-  }, [monthSeries]);
-
-  const closeResultInsightPanel = useCallback(() => {
-    setSelectedResultRowId(null);
-    lastResultTriggerRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
-    if (!selectedResultRowId) {
-      return;
-    }
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        closeResultInsightPanel();
+    return [
+      indtaegterRow,
+      personaleRow,
+      driftRow,
+      driftsresultatRow,
+      afskrivningerRow,
+      resultatFoerFinansielleRow,
+      finansielleRow,
+      resultatRow,
+    ].map((row) => {
+      if (row.variant !== 'line') {
+        return row;
       }
-    };
 
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [closeResultInsightPanel, selectedResultRowId]);
+      const categoryPoint = row.sourceCategory
+        ? activeData.byKontoMap6.find(
+            (point) => point.name === row.sourceCategory,
+          )
+        : null;
+      const categoryShare =
+        categoryPoint && costCompositionTotal > 0
+          ? (Math.abs(categoryPoint.Belob) / costCompositionTotal) * 100
+          : null;
+
+      const varianceShare =
+        totalAbsLineVariance > 0
+          ? (Math.abs(row.diff) / totalAbsLineVariance) * 100
+          : null;
+
+      const contributionToNetDelta =
+        netDelta !== 0 ? (row.diff / netDelta) * 100 : null;
+
+      const summary =
+        row.diff >= 0
+          ? `${row.name} er ${Math.abs(row.diffPct).toFixed(1)}% over budget.`
+          : `${row.name} er ${Math.abs(row.diffPct).toFixed(1)}% under budget.`;
+
+      return {
+        ...row,
+        insight: {
+          varianceShare,
+          varianceRank: rankById.get(row.id) ?? null,
+          budgetPrecision: Math.max(0, 100 - Math.abs(row.diffPct)),
+          contributionToNetDelta,
+          categoryShare,
+          summary,
+        },
+      };
+    });
+  }, [
+    activeData.byKontoMap6,
+    activeData.kpis.belob,
+    activeData.kpis.budgBelob,
+    afskrivningerRow,
+    costCompositionTotal,
+    driftRow,
+    driftsresultatRow,
+    finansielleRow,
+    indtaegterRow,
+    personaleRow,
+    resultatFoerFinansielleRow,
+    resultatRow,
+  ]);
 
   const currencyScale = useMemo(
     () =>
@@ -711,407 +575,26 @@ function App() {
           cardId='result-table'
           onBackfaceReady={handleCardBackfaceReady}
         >
-          <Card className='h-full'>
-            <Title className='dd-section-header'>Resultatopgørelse</Title>
-            <Text className='font-body text-dd-body text-tremor-content-subtle'>
-              Realiseret vs. budget pr. regnskabspost for den valgte periode
-            </Text>
-            <div className='mt-5'>
-              <TableRoot>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableHeaderCell>
-                        <TableHeaderButton
-                          onClick={() => handleResultSort('default')}
-                          aria-label='Nulstil sortering til standardrækkefølge'
-                        >
-                          Regnskabspost
-                        </TableHeaderButton>
-                      </TableHeaderCell>
-                      <TableHeaderCell className='text-right'>
-                        <TableHeaderButton
-                          align='right'
-                          onClick={() => handleResultSort('realized')}
-                          aria-label='Sorter efter realiseret'
-                        >
-                          Realiseret
-                          <SortIndicatorIcon
-                            sortKey='realized'
-                            activeSortKey={resultSort.key}
-                            direction={resultSort.direction}
-                          />
-                        </TableHeaderButton>
-                      </TableHeaderCell>
-                      <TableHeaderCell className='text-right'>
-                        <TableHeaderButton
-                          align='right'
-                          onClick={() => handleResultSort('budget')}
-                          aria-label='Sorter efter budget'
-                        >
-                          Budget
-                          <SortIndicatorIcon
-                            sortKey='budget'
-                            activeSortKey={resultSort.key}
-                            direction={resultSort.direction}
-                          />
-                        </TableHeaderButton>
-                      </TableHeaderCell>
-                      <TableHeaderCell className='text-right'>
-                        <TableHeaderButton
-                          align='right'
-                          onClick={() => handleResultSort('diff')}
-                          aria-label='Sorter efter afvigelse'
-                        >
-                          Afvigelse
-                          <SortIndicatorIcon
-                            sortKey='diff'
-                            activeSortKey={resultSort.key}
-                            direction={resultSort.direction}
-                          />
-                        </TableHeaderButton>
-                      </TableHeaderCell>
-                      <TableHeaderCell className='text-right'>
-                        <TableHeaderButton
-                          align='right'
-                          onClick={() => handleResultSort('diffPct')}
-                          aria-label='Sorter efter afvigelse i procent'
-                        >
-                          Afvigelse %
-                          <SortIndicatorIcon
-                            sortKey='diffPct'
-                            activeSortKey={resultSort.key}
-                            direction={resultSort.direction}
-                          />
-                        </TableHeaderButton>
-                      </TableHeaderCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {sortedResultTableRows.map((row) => {
-                      const isSelected = row.id === selectedResultRow?.id;
-                      const isHovered = row.id === hoveredResultRowId;
-
-                      return [
-                        <TableRow
-                          key={row.id}
-                          className={`cursor-pointer transition-colors ${
-                            row.variant === 'total'
-                              ? 'border-t-2 border-tremor-border'
-                              : row.variant === 'subtotal'
-                                ? 'border-t border-tremor-border bg-tremor-background-muted'
-                                : ''
-                          } ${
-                            isSelected
-                              ? 'bg-tremor-background-muted'
-                              : isHovered
-                                ? 'bg-slate-50'
-                                : ''
-                          }`}
-                          onMouseEnter={() => setHoveredResultRowId(row.id)}
-                          onMouseLeave={() => setHoveredResultRowId(null)}
-                          onClick={(event) => {
-                            lastResultTriggerRef.current =
-                              event.currentTarget as HTMLElement;
-                            const nextId =
-                              selectedResultRowId === row.id ? null : row.id;
-                            setSelectedResultRowId(nextId);
-                            if (nextId && row.sourceCategory) {
-                              updateSelection('KontoMap6', row.sourceCategory);
-                            }
-                          }}
-                          onKeyDown={(event) => {
-                            if (event.key === 'Enter' || event.key === ' ') {
-                              event.preventDefault();
-                              lastResultTriggerRef.current =
-                                event.currentTarget as HTMLElement;
-                              const nextId =
-                                selectedResultRowId === row.id ? null : row.id;
-                              setSelectedResultRowId(nextId);
-                              if (nextId && row.sourceCategory) {
-                                updateSelection(
-                                  'KontoMap6',
-                                  row.sourceCategory,
-                                );
-                              }
-                            }
-                          }}
-                          tabIndex={0}
-                          aria-expanded={isSelected}
-                          aria-label={`Vis indsigt for ${row.name}`}
-                        >
-                          <TableCell
-                            className={
-                              row.variant === 'subtotal' ||
-                              row.variant === 'total'
-                                ? 'font-semibold text-tremor-content-strong'
-                                : 'font-medium text-tremor-content-strong'
-                            }
-                          >
-                            {row.name}
-                          </TableCell>
-                          <TableCell
-                            className={`text-right ${
-                              row.variant === 'subtotal' ||
-                              row.variant === 'total'
-                                ? 'font-semibold text-tremor-content-strong'
-                                : ''
-                            }`}
-                          >
-                            {formatCurrency(row.realized)}
-                          </TableCell>
-                          <TableCell
-                            className={`text-right ${
-                              row.variant === 'subtotal' ||
-                              row.variant === 'total'
-                                ? 'font-semibold text-tremor-content-strong'
-                                : ''
-                            }`}
-                          >
-                            {formatCurrency(row.budget)}
-                          </TableCell>
-                          <TableCell
-                            className={`text-right ${
-                              row.variant === 'subtotal' ||
-                              row.variant === 'total'
-                                ? 'font-semibold text-tremor-content-strong'
-                                : ''
-                            }`}
-                          >
-                            {formatCurrency(row.diff)}
-                          </TableCell>
-                          <TableCell className='text-right'>
-                            <BadgeDelta
-                              deltaType={
-                                row.diff >= 0 ? 'increase' : 'decrease'
-                              }
-                              isIncreasePositive
-                            >
-                              {row.diffPct >= 0 ? '+' : ''}
-                              {row.diffPct.toFixed(1)}%
-                            </BadgeDelta>
-                          </TableCell>
-                        </TableRow>,
-                        isSelected ? (
-                          <TableRow
-                            key={`${row.id}-context`}
-                            className='dd-row-context-enter'
-                          >
-                            <TableCell
-                              colSpan={5}
-                              className='overflow-visible p-0'
-                            >
-                              <div className='relative mt-1 overflow-visible border-l-4 border-l-datadein-marine bg-tremor-background-muted px-4 pb-4 pt-4'>
-                                <div className='absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2'>
-                                  <button
-                                    type='button'
-                                    className='dd-context-close-btn relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-transparent bg-white text-datadein-sten-200 transition-colors hover:text-datadein-marine focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-datadein-marine/30'
-                                    onClick={closeResultInsightPanel}
-                                    aria-label='Luk kontekst'
-                                  >
-                                    <ChevronUpIcon className='h-4 w-4' />
-                                  </button>
-                                </div>
-
-                                <Grid
-                                  numItems={1}
-                                  numItemsLg={2}
-                                  className='mt-4 gap-3'
-                                >
-                                  <Card className='p-3'>
-                                    <Text className='dd-section-header m-0'>
-                                      Afvigelsesformel
-                                    </Text>
-                                    <Text className='mt-2 text-tremor-content-emphasis'>
-                                      {formatCurrency(
-                                        selectedResultRow.realized,
-                                      )}{' '}
-                                      +{' '}
-                                      {formatCurrency(selectedResultRow.budget)}{' '}
-                                      ={' '}
-                                      <span className='font-semibold text-tremor-content-strong'>
-                                        {formatCurrency(selectedResultRow.diff)}
-                                      </span>
-                                    </Text>
-                                    <Text className='mt-1 text-sm text-tremor-content-subtle'>
-                                      Afvigelse:{' '}
-                                      {selectedResultRow.diffPct.toFixed(1)}%
-                                    </Text>
-                                  </Card>
-
-                                  <Card className='p-3'>
-                                    <Text className='dd-section-header m-0'>
-                                      Nøgletal
-                                    </Text>
-                                    <div className='mt-2 space-y-1'>
-                                      {selectedVarianceImpactPct !== null ? (
-                                        <Text className='text-sm text-tremor-content-emphasis'>
-                                          Andel af total afvigelse:{' '}
-                                          {selectedVarianceImpactPct.toFixed(1)}
-                                          %
-                                        </Text>
-                                      ) : (
-                                        <Text className='text-sm text-tremor-content-subtle'>
-                                          Andel af total afvigelse: ikke
-                                          relevant for subtotal/total
-                                        </Text>
-                                      )}
-                                      {selectedVarianceRank !== null ? (
-                                        <Text className='text-sm text-tremor-content-emphasis'>
-                                          Variansrang blandt linjeposter: #
-                                          {selectedVarianceRank}
-                                        </Text>
-                                      ) : null}
-                                      {selectedBudgetPrecision !== null ? (
-                                        <Text className='text-sm text-tremor-content-emphasis'>
-                                          Budgetpræcision:{' '}
-                                          {selectedBudgetPrecision.toFixed(1)}%
-                                        </Text>
-                                      ) : null}
-                                      {selectedContributionToNetDelta !==
-                                      null ? (
-                                        <Text className='text-sm text-tremor-content-emphasis'>
-                                          Bidrag til periodens netdelta:{' '}
-                                          {selectedContributionToNetDelta.toFixed(
-                                            1,
-                                          )}
-                                          %
-                                        </Text>
-                                      ) : (
-                                        <Text className='text-sm text-tremor-content-subtle'>
-                                          Bidrag til periodens netdelta: ikke
-                                          beregnelig (netdelta = 0)
-                                        </Text>
-                                      )}
-                                    </div>
-                                  </Card>
-
-                                  <Card className='p-3'>
-                                    <Text className='dd-section-header m-0'>
-                                      Kategorikontekst
-                                    </Text>
-                                    {selectedCategoryPoint ? (
-                                      <>
-                                        <Text className='mt-2 text-tremor-content-emphasis'>
-                                          Realt beløb i kategori:{' '}
-                                          {formatCurrency(
-                                            selectedCategoryPoint.Belob,
-                                          )}
-                                        </Text>
-                                        {selectedCategoryShare !== null ? (
-                                          <Text className='mt-1 text-sm text-tremor-content-subtle'>
-                                            Andel af samlede omkostninger:{' '}
-                                            {selectedCategoryShare.toFixed(1)}%
-                                          </Text>
-                                        ) : null}
-                                      </>
-                                    ) : (
-                                      <Text className='mt-2 text-sm text-tremor-content-subtle'>
-                                        Denne linje er en beregnet
-                                        subtotal/total uden direkte
-                                        kategori-match.
-                                      </Text>
-                                    )}
-                                  </Card>
-
-                                  <Card className='p-3'>
-                                    <Text className='dd-section-header m-0'>
-                                      Periodetryk
-                                    </Text>
-                                    {monthlyPressureSummary ? (
-                                      <div className='mt-2 space-y-1'>
-                                        <Text className='text-sm text-datadein-marine'>
-                                          Bedre end budget:{' '}
-                                          {
-                                            monthlyPressureSummary.monthsBetterThanBudget
-                                          }{' '}
-                                          mdr.
-                                        </Text>
-                                        <Text className='text-sm text-datadein-energi'>
-                                          Dårligere end budget:{' '}
-                                          {
-                                            monthlyPressureSummary.monthsWorseThanBudget
-                                          }{' '}
-                                          mdr.
-                                        </Text>
-                                        <Text className='text-sm text-tremor-content-subtle'>
-                                          Bedste måned:{' '}
-                                          {
-                                            monthlyPressureSummary.bestMonth
-                                              .monthLabel
-                                          }{' '}
-                                          (
-                                          {formatCurrency(
-                                            monthlyPressureSummary.bestMonth
-                                              .delta,
-                                          )}
-                                          )
-                                        </Text>
-                                        <Text className='text-sm text-tremor-content-subtle'>
-                                          Værste måned:{' '}
-                                          {
-                                            monthlyPressureSummary.worstMonth
-                                              .monthLabel
-                                          }{' '}
-                                          (
-                                          {formatCurrency(
-                                            monthlyPressureSummary.worstMonth
-                                              .delta,
-                                          )}
-                                          )
-                                        </Text>
-                                      </div>
-                                    ) : (
-                                      <Text className='mt-2 text-sm text-tremor-content-subtle'>
-                                        Ingen månedlige datapunkter tilgængelige
-                                        for periodetryk.
-                                      </Text>
-                                    )}
-                                  </Card>
-
-                                  <Card className='p-3 lg:col-span-2'>
-                                    <Text className='dd-section-header m-0'>
-                                      Top bidragydere i perioden
-                                    </Text>
-                                    <div className='mt-2 space-y-2'>
-                                      {topAnsvarPreview.map((point) => (
-                                        <Flex
-                                          key={`ansvar-${point.name}`}
-                                          justifyContent='between'
-                                        >
-                                          <Text className='text-sm text-tremor-content-emphasis'>
-                                            {point.name}
-                                          </Text>
-                                          <Text className='text-sm font-semibold text-tremor-content-strong'>
-                                            {formatCurrency(point.Belob)}
-                                          </Text>
-                                        </Flex>
-                                      ))}
-                                      {topFormaalPreview
-                                        .slice(0, 1)
-                                        .map((point) => (
-                                          <Text
-                                            key={`formaal-${point.name}`}
-                                            className='text-xs text-tremor-content-subtle'
-                                          >
-                                            Største formål: {point.name} (
-                                            {formatCurrency(point.Belob)})
-                                          </Text>
-                                        ))}
-                                    </div>
-                                  </Card>
-                                </Grid>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ) : null,
-                      ];
-                    })}
-                  </TableBody>
-                </Table>
-              </TableRoot>
-            </div>
-          </Card>
+          <ResultTable
+            rows={resultTableRows}
+            insightData={{
+              byKontoMap6: activeData.byKontoMap6,
+              topAnsvar: activeData.topAnsvar,
+              topFormaal: activeData.topFormaal,
+              monthly: monthSeries.map((point) => ({
+                monthLabel: point.monthLabel,
+                Belob: point.Belob,
+                BudgBelob: point.BudgBelob,
+              })),
+              netPeriodDelta: activeData.kpis.belob - activeData.kpis.budgBelob,
+              costCompositionTotal,
+            }}
+            onRowSelect={(category) => {
+              if (category) {
+                updateSelection('KontoMap6', category);
+              }
+            }}
+          />
         </FlipCard>
 
         <Grid numItems={1} numItemsLg={2} className='gap-6 items-stretch'>
