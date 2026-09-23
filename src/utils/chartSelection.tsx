@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ComponentType } from 'react';
 import type { NameType } from 'recharts/types/component/DefaultTooltipContent';
 import type { CustomTooltipProps } from '@tremor/react/dist/components/chart-elements/common/CustomTooltipProps';
@@ -67,23 +67,27 @@ export const createChartSelectionTooltip = (
   stageHoverCandidate: StageHoverCandidate,
 ): ComponentType<ChartTooltipProps> => {
   return ({ active, payload, label }: ChartTooltipProps) => {
-    if (!active || !payload?.length) {
-      stageHoverCandidate(kind, null);
-      return null;
-    }
+    const hasPayload = Boolean(active && payload?.length);
+    const safePayload = payload ?? [];
+    const hoverLabel = hasPayload
+      ? Array.isArray(label)
+        ? label.join(' / ')
+        : toDisplayLabel(label)
+      : null;
 
-    const hoverLabel = Array.isArray(label)
-      ? label.join(' / ')
-      : toDisplayLabel(label);
-    if (hoverLabel) {
+    useEffect(() => {
       stageHoverCandidate(kind, hoverLabel);
+    }, [hoverLabel]);
+
+    if (!hasPayload) {
+      return null;
     }
 
     return (
       <div className='rounded-tremor-default border border-tremor-border bg-tremor-background px-3 py-2 shadow-tremor-dropdown'>
         <p className='text-sm  font-bold'>{hoverLabel ?? ''}</p>
         <div className='mt-1 space-y-1'>
-          {payload.map((item, index) => (
+          {safePayload.map((item, index) => (
             <p
               key={`${String(item.name ?? 'serie')}-${index}`}
               className='text-sm text-tremor-content-strong'
@@ -107,29 +111,22 @@ export const createDonutSelectionTooltip = (
   stageHoverCandidate: StageHoverCandidate,
 ): ComponentType<DonutTooltipProps> => {
   return ({ active, payload }: DonutTooltipProps) => {
-    if (!active || !payload?.length) {
-      stageHoverCandidate('KontoMap6', null);
-      return null;
-    }
-
-    const first = payload[0];
-    if (!first) {
-      return null;
-    }
-
+    const first = active && payload?.length ? payload[0] : null;
     const fallbackName =
-      first.payload && typeof first.payload.name === 'string'
+      first?.payload && typeof first.payload.name === 'string'
         ? first.payload.name
         : null;
 
     const nameCandidate =
-      typeof first.name === 'string' ? first.name : fallbackName;
+      typeof first?.name === 'string' ? first.name : fallbackName;
 
-    if (!nameCandidate) {
+    useEffect(() => {
+      stageHoverCandidate('KontoMap6', nameCandidate ?? null);
+    }, [nameCandidate]);
+
+    if (!first || !nameCandidate) {
       return null;
     }
-
-    stageHoverCandidate('KontoMap6', nameCandidate);
 
     return (
       <div className='rounded-tremor-default border border-tremor-border bg-tremor-background px-3 py-2 shadow-tremor-dropdown'>

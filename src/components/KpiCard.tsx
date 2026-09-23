@@ -12,6 +12,9 @@ type KpiCardProps = {
   metricClassName?: string;
 };
 
+const isPrimitiveMetric = (value: ReactNode): value is string | number =>
+  typeof value === 'string' || typeof value === 'number';
+
 export function KpiCard({
   title,
   metric,
@@ -28,11 +31,17 @@ export function KpiCard({
 
         <div className='grid min-h-0 flex-1 grid-rows-[3rem,minmax(0,1fr),3rem] items-end'>
           <div className=' overflow-hidden'>
-            <Metric
-              className={`m-0 flex  items-start overflow-hidden${metricClassName ? ` ${metricClassName}` : ''}`}
-            >
-              {metric}
-            </Metric>
+            {isPrimitiveMetric(metric) ? (
+              <Metric
+                className={`m-0 flex  items-start overflow-hidden${metricClassName ? ` ${metricClassName}` : ''}`}
+              >
+                {metric}
+              </Metric>
+            ) : (
+              <div className='m-0 flex items-start overflow-hidden'>
+                {metric}
+              </div>
+            )}
           </div>
 
           <div className='flex min-h-0 justify-start overflow-hidden'>

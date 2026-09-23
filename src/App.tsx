@@ -10,7 +10,6 @@ import {
   DonutChart,
   Flex,
   Grid,
-  Metric,
   Subtitle,
   Tab,
   TabGroup,
@@ -1361,7 +1360,7 @@ function App() {
                     <Text className='text-datadein-marine font-bold text-xl m-0'>
                       Totale omkostninger
                     </Text>
-                    <Metric className='h-12 flex flex-col items-start my-0'>
+                    <div className='h-12 my-0'>
                       {(() => {
                         const { value, unit } = formatCompact(
                           costCompositionTotal,
@@ -1381,7 +1380,7 @@ function App() {
                           </div>
                         );
                       })()}
-                    </Metric>
+                    </div>
                   </div>
                 </div>
               </div>
