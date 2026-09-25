@@ -2,16 +2,28 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { AreaChart, BarChart, DonutChart } from '@tremor/react';
 
+import { FlipCard, MIN_LOAD_DELAY } from './components/FlipCard';
+import { KpiCard } from './components/KpiCard';
+import {
+  ResultTable,
+  type ResultRowVariant,
+  type ResultTableRow,
+} from './components/ResultTable';
+import { Badge, BadgeDelta } from './components/ui/badge';
+import { Button } from './components/ui/button';
+import { Card } from './components/ui/card';
+import { Grid } from './components/ui/layout';
+import { Tabs, TabsList, TabsTrigger } from './components/ui/tabs';
+import { Text, Title } from './components/ui/text';
+import {
+  useDashboardRangeData,
+  type DashboardRangeKey,
+} from './hooks/useDashboardRangeData';
+import { useFlipCardLoadCycle } from './hooks/useFlipCardLoadCycle';
 import {
   createChartSelectionTooltips,
   useChartSelection,
 } from './utils/chartSelection';
-import { formatRangeLabel } from './utils/labels';
-import {
-  type DashboardRangeKey,
-  useDashboardRangeData,
-} from './hooks/useDashboardRangeData';
-import { useFlipCardLoadCycle } from './hooks/useFlipCardLoadCycle';
 import {
   formatCompact,
   formatCurrency,
@@ -20,19 +32,7 @@ import {
   getEventName,
   getScale,
 } from './utils/format';
-import { FlipCard, MIN_LOAD_DELAY } from './components/FlipCard';
-import { KpiCard } from './components/KpiCard';
-import {
-  ResultTable,
-  type ResultRowVariant,
-  type ResultTableRow,
-} from './components/ResultTable';
-import { Tabs, TabsList, TabsTrigger } from './components/ui/tabs';
-import { Badge, BadgeDelta } from './components/ui/badge';
-import { Button } from './components/ui/button';
-import { Grid } from './components/ui/layout';
-import { Card } from './components/ui/card';
-import { Subtitle, Text, Title } from './components/ui/text';
+import { formatRangeLabel } from './utils/labels';
 
 // Keep the range switcher centralized and explicit. The app uses the selected
 // period as the source of truth for both data fetching and chart state.
@@ -359,18 +359,6 @@ function App() {
         }`}
       >
         <section className='dd-grid-enter grid gap-6 items-start'>
-          <div className='space-y-2 pt-2'>
-            <p className='font-body text-[0.7rem] uppercase tracking-[0.14em] text-tremor-content-subtle'>
-              DataDein Prototypen
-            </p>
-            <h1 className='font-display text-3xl font-semibold tracking-[-0.02em] text-tremor-content-strong sm:text-4xl'>
-              DataDein Dashboard
-            </h1>
-            <Subtitle className='max-w-2xl font-body text-dd-body text-tremor-content-emphasis'>
-              Overblik over forbrug, budgetudvikling og fokusenheder baseret på
-              reelle regnskabsdata.
-            </Subtitle>
-          </div>
           <Card className='dd-grid-enter flex gap-4'>
             <div>
               <Title className='dd-section-header mb-0'>
