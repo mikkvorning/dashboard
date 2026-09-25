@@ -42,6 +42,19 @@ const TOTAL_FLIP_CARDS = 10;
 const isDashboardRangeKey = (value: string): value is DashboardRangeKey =>
   rangeOptions.includes(value as DashboardRangeKey);
 
+const renderKpiMetric = (value: string, unit?: string) => (
+  <div className='flex items-baseline gap-1'>
+    <span className='font-display text-4xl leading-none tracking-tight text-datadein-marine'>
+      {value}
+    </span>
+    {unit ? (
+      <span className='font-body text-dd-body text-tremor-content-subtle'>
+        {unit}
+      </span>
+    ) : null}
+  </div>
+);
+
 function App() {
   const [selectedRange, setSelectedRange] = useState<DashboardRangeKey>('1Y');
   const {
@@ -395,8 +408,6 @@ function App() {
               </div>
             </div>
 
-            {/* <Divider className='my-5' /> */}
-
             <div className='space-y-3 flex-1'>
               {selection ? (
                 // Keep a compact “current focus” state in the summary card so the user
@@ -437,7 +448,6 @@ function App() {
             </div>
           </Card>
         </section>
-
         <Grid
           numItems={1}
           numItemsSm={2}
@@ -463,16 +473,7 @@ function App() {
                   digits: 2,
                 });
 
-                return (
-                  <div className='flex items-baseline gap-1'>
-                    <span className='text-4xl text-datadein-marine'>
-                      {value}
-                    </span>
-                    <span className='font-body text-tremor-content-subtle'>
-                      {unit}
-                    </span>
-                  </div>
-                );
+                return renderKpiMetric(value, unit);
               })()}
               sparkChartProps={{
                 data: monthlyChartSeries,
@@ -512,16 +513,7 @@ function App() {
                   },
                 );
 
-                return (
-                  <div className='flex items-baseline gap-1'>
-                    <span className='text-4xl text-datadein-marine'>
-                      {value}
-                    </span>
-                    <span className='font-body text-tremor-content-subtle'>
-                      {unit}
-                    </span>
-                  </div>
-                );
+                return renderKpiMetric(value, unit);
               })()}
               sparkChartProps={{
                 data: monthlyChartSeries,
@@ -544,8 +536,7 @@ function App() {
           >
             <KpiCard
               title='ÅE (Årsværk)'
-              metric={formatNumber(activeData.kpis.ae)}
-              metricClassName='text-4xl text-datadein-marine'
+              metric={renderKpiMetric(formatNumber(activeData.kpis.ae))}
               footer={`Budgetteret ÅE: ${formatNumber(activeData.kpis.budgAe)}`}
             />
           </FlipCard>
@@ -560,8 +551,7 @@ function App() {
           >
             <KpiCard
               title='Timer / Elever'
-              metric={formatNumber(activeData.kpis.timer)}
-              metricClassName='text-4xl text-datadein-marine'
+              metric={renderKpiMetric(formatNumber(activeData.kpis.timer))}
               footer={`Elever i periode: ${formatNumber(activeData.kpis.elever)}`}
             />
           </FlipCard>
@@ -596,7 +586,6 @@ function App() {
             }}
           />
         </FlipCard>
-
         <Grid numItems={1} numItemsLg={2} className='gap-6 items-stretch'>
           {/* The monthly views should be the first deep-dive: they tell the story of
               trend, variance, and pacing before the user explores grouped dimensions. */}
@@ -683,7 +672,6 @@ function App() {
             </Card>
           </FlipCard>
         </Grid>
-
         <Grid numItems={1} numItemsLg={3} className='gap-6 items-stretch'>
           {/* Drill-down charts stay interactive; selecting a segment updates the shared
               focus state and keeps the dashboard consistent across all views. */}

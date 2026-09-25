@@ -15,7 +15,7 @@ import {
   TableRoot,
   TableRow,
 } from './ui/table';
-import { Text } from './ui/text';
+import { Text, Title } from './ui/text';
 import { formatCurrency } from '../utils/format';
 
 export type ResultRowVariant = 'line' | 'subtotal' | 'total';
@@ -348,7 +348,7 @@ export function ResultTable({
 
   return (
     <Card className='h-full'>
-      <Text className='dd-section-header'>Resultatopgørelse</Text>
+      <Title className='dd-section-header'>Resultatopgørelse</Title>
       <Text className='font-body text-dd-body text-tremor-content-subtle'>
         Realiseret vs. budget pr. regnskabspost for den valgte periode
       </Text>
@@ -461,17 +461,15 @@ export function ResultTable({
                       className='dd-row-context-enter'
                     >
                       <TableCell colSpan={5} className='overflow-visible p-0'>
-                        <div className='relative mt-1 overflow-hidden border-l-4 border-l-datadein-marine bg-tremor-background-muted px-4 pb-4 pt-4'>
-                          <div className='absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2'>
-                            <button
-                              type='button'
-                              className='dd-context-close-btn relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-transparent bg-white text-datadein-sten-200 transition-colors hover:text-datadein-marine focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-datadein-marine/30'
-                              onClick={closeResultInsightPanel}
-                              aria-label='Luk kontekst'
-                            >
-                              <ChevronUpIcon className='h-4 w-4' />
-                            </button>
-                          </div>
+                        <div className='relative border-l-4 border-l-datadein-marine bg-tremor-background-muted p-4 pt-1 -mx-4'>
+                          <button
+                            type='button'
+                            className='dd-context-close-btn absolute z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-transparent bg-white text-datadein-sten-200 transition-colors hover:text-datadein-marine focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-datadein-marine/30 left-1/2 top-0 -translate-x-1/2 -translate-y-1/2'
+                            onClick={closeResultInsightPanel}
+                            aria-label='Luk kontekst'
+                          >
+                            <ChevronUpIcon className='h-4 w-4' />
+                          </button>
 
                           <Grid
                             numItems={1}
