@@ -400,11 +400,11 @@ function App() {
               {selection ? (
                 // Keep a compact “current focus” state in the summary card so the user
                 // can see which chart element was selected without losing context.
-                <div className='rounded-tremor-default border border-tremor-border bg-tremor-background-muted p-6 flex'>
+                <div className='bg-tremor-background-muted flex p-6 h-full'>
                   <div className='flex-1'>
-                    <Text className='font-body text-dd-card-label uppercase m-0 text-tremor-content-subtle'>
+                    <Title className='dd-section-header mt-0'>
                       Valgt fokus
-                    </Text>
+                    </Title>
                     <p className='mt-1 text-sm text-tremor-content-emphasis'>
                       <span className='font-body text-dd-card-label uppercase text-tremor-content-subtle'>
                         {selection.kind}
