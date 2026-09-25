@@ -359,19 +359,21 @@ function App() {
         }`}
       >
         <section className='dd-grid-enter grid gap-6 items-start'>
-          <Card className='dd-grid-enter flex gap-4'>
-            <div>
-              <Title className='dd-section-header mb-0'>
-                Rapporteringsperiode
-              </Title>
-              {activeData.generatedAt ? (
-                <Text className='text-sm mt-0 text-tremor-content-subtle'>
-                  Genereret{' '}
-                  {activeData.generatedAt.replace('T', ' ').substring(0, 16)}{' '}
-                  UTC
-                </Text>
-              ) : null}
-              <div className='flex flex-row  gap-4'>
+          <Card className='dd-grid-enter flex flex-col gap-4 lg:flex-row lg:items-stretch'>
+            <div className='flex h-full flex-col gap-2 lg:min-w-[20rem] lg:flex-none'>
+              <div>
+                <Title className='dd-section-header m-0'>
+                  Rapporteringsperiode
+                </Title>
+                {activeData.generatedAt ? (
+                  <Text className='text-sm mt-0 text-tremor-content-subtle'>
+                    Genereret{' '}
+                    {activeData.generatedAt.replace('T', ' ').substring(0, 16)}{' '}
+                    UTC
+                  </Text>
+                ) : null}
+              </div>
+              <div className='flex flex-row gap-4'>
                 <Tabs
                   className='w-max'
                   value={selectedRange}
@@ -396,15 +398,13 @@ function App() {
               </div>
             </div>
 
-            <div className='space-y-3 flex-1'>
+            <div className='flex min-h-0 flex-1 flex-col gap-3'>
               {selection ? (
                 // Keep a compact “current focus” state in the summary card so the user
                 // can see which chart element was selected without losing context.
-                <div className='bg-tremor-background-muted flex p-6 h-full'>
+                <div className='flex h-full min-h-0 w-full flex-1 self-stretch bg-tremor-background-muted p-6'>
                   <div className='flex-1'>
-                    <Title className='dd-section-header mt-0'>
-                      Valgt fokus
-                    </Title>
+                    <Title className='dd-section-header m-0'>Valgt fokus</Title>
                     <p className='mt-1 text-sm text-tremor-content-emphasis'>
                       <span className='font-body text-dd-card-label uppercase text-tremor-content-subtle'>
                         {selection.kind}
