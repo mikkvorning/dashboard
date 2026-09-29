@@ -169,15 +169,19 @@ body {
   z-index: 9999 !important;
 }
 
-@keyframes riseIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.dd-root table {
+  border: 0;
+  border-collapse: collapse;
+}
+
+.dd-root th,
+.dd-root td {
+  border: 0;
+  padding: 16px !important;
+}
+
+.dd-root table > thead > tr > th {
+  border-block-start: 0 !important;
 }
 
 @keyframes rowContextReveal {

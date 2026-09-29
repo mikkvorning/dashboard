@@ -464,7 +464,7 @@ export function ResultTable({
                         <div className='relative border-l-4 border-l-datadein-marine bg-tremor-background-muted p-4 pt-1 -mx-4'>
                           <button
                             type='button'
-                            className='dd-context-close-btn absolute z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-transparent bg-white text-datadein-sten-200 transition-colors hover:text-datadein-marine focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-datadein-marine/30 left-1/2 top-0 -translate-x-1/2 -translate-y-1/2'
+                            className='dd-context-close-btn absolute z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-transparent bg-white !text-slate-500 transition-colors hover:!text-slate-900 left-1/2 top-0 -translate-x-1/2 -translate-y-1/2'
                             onClick={closeResultInsightPanel}
                             aria-label='Luk kontekst'
                           >
